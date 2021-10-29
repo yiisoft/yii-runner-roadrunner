@@ -15,7 +15,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
-use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
+use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotFoundException;
@@ -110,7 +110,7 @@ final class RoadRunnerApplicationRunner
     private function createTemporaryErrorHandler(): ErrorHandler
     {
         $logger = new Logger([new FileTarget(dirname(__DIR__) . '/runtime/logs/app.log')]);
-        return new ErrorHandler($logger, new HtmlRenderer());
+        return new ErrorHandler($logger, new PlainTextRenderer());
     }
 
     /**
