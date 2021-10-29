@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Runner\RoadRunner;
 
 use Spiral\RoadRunner;
-use App\Handler\ThrowableHandler;
 use ErrorException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
