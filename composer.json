@@ -30,21 +30,12 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
-        "httpsoft/http-message": "^1.0.5",
-        "psr/container": "^1.0",
-        "psr/http-message": "^1.0",
         "spiral/roadrunner": "^2.5",
-        "vlucas/phpdotenv": "^5.3",
-        "yiisoft/config": "^1.0@dev",
-        "yiisoft/definitions": "3.0.x-dev",
+        "yiisoft/yii-runner": "@dev",
         "yiisoft/di": "@dev",
         "yiisoft/error-handler": "^1.0",
         "yiisoft/log": "^1.0",
-        "yiisoft/log-target-file": "^1.0",
-        "yiisoft/yii-event": "^1.0",
-        "yiisoft/yii-web": "^3.0@dev",
-        "yiisoft/router": "@dev",
-        "yiisoft/router-fastroute": "@dev"
+        "yiisoft/log-target-file": "^1.0"        
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

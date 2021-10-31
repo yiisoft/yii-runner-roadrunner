@@ -23,13 +23,17 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Event\ListenerConfigurationChecker;
+use Yiisoft\Yii\Runner\BootstrapRunner;
+use Yiisoft\Yii\Runner\ConfigFactory;
+use Yiisoft\Yii\Runner\RunnerInterface;
+use Yiisoft\Yii\Runner\ThrowableHandler;
 use Yiisoft\Yii\Web\Application;
 use Yiisoft\Yii\Web\Exception\HeadersHaveBeenSentException;
 
 use function dirname;
 use function microtime;
 
-final class RoadRunnerApplicationRunner
+final class RoadRunnerApplicationRunner implements RunnerInterface
 {
     private bool $debug;
     private ?string $environment;
