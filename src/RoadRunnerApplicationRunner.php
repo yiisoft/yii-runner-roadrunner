@@ -37,9 +37,11 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
 {
     private bool $debug;
     private ?string $environment;
+    private string $rootPath;
 
-    public function __construct(bool $debug, ?string $environment)
+    public function __construct(string $rootPath, bool $debug, ?string $environment)
     {
+        $this->rootPath = $rootPath;
         $this->debug = $debug;
         $this->environment = $environment;
     }
@@ -54,7 +56,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         $errorHandler = $this->createTemporaryErrorHandler();
         $this->registerErrorHandler($errorHandler);
 
-        $config = ConfigFactory::create($this->environment);
+        $config = ConfigFactory::create($this->rootPath, $this->environment);
 
         $container = new Container(
             $config->get('web'),
