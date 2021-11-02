@@ -11,6 +11,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
+use Throwable;
+use Yiisoft\Config\Config;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
@@ -28,16 +30,19 @@ use Yiisoft\Yii\Runner\ConfigFactory;
 use Yiisoft\Yii\Runner\RunnerInterface;
 use Yiisoft\Yii\Runner\ThrowableHandler;
 use Yiisoft\Yii\Web\Application;
-use Yiisoft\Yii\Web\Exception\HeadersHaveBeenSentException;
 
-use function dirname;
+use function gc_collect_cycles;
 use function microtime;
 
 final class RoadRunnerApplicationRunner implements RunnerInterface
 {
     private bool $debug;
-    private ?string $environment;
     private string $rootPath;
+    private ?string $environment;
+    private ?Config $config = null;
+    private ?ContainerInterface $container = null;
+    private ?string $bootstrapGroup = 'bootstrap-web';
+    private ?string $eventGroup = 'event-web';
 
     public function __construct(string $rootPath, bool $debug, ?string $environment)
     {
@@ -46,19 +51,61 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         $this->environment = $environment;
     }
 
+    public function withBootstrap(string $bootstrapGroup): self
+    {
+        $new = clone $this;
+        $new->bootstrapGroup = $bootstrapGroup;
+        return $new;
+    }
+
+    public function withoutBootstrap(): self
+    {
+        $new = clone $this;
+        $new->bootstrapGroup = null;
+        return $new;
+    }
+
+    public function withEvent(string $eventGroup): self
+    {
+        $new = clone $this;
+        $new->eventGroup = $eventGroup;
+        return $new;
+    }
+
+    public function withoutEvent(): self
+    {
+        $new = clone $this;
+        $new->eventGroup = null;
+        return $new;
+    }
+
+    public function withConfig(Config $config): self
+    {
+        $new = clone $this;
+        $new->config = $config;
+        return $new;
+    }
+
+    public function withContainer(ContainerInterface $container): self
+    {
+        $new = clone $this;
+        $new->container = $container;
+        return $new;
+    }
+
     /**
-     * @throws CircularReferenceException|ErrorException|HeadersHaveBeenSentException|InvalidConfigException
+     * @throws CircularReferenceException|ErrorException|InvalidConfigException
      * @throws NotFoundException|NotInstantiableException
      */
     public function run(): void
     {
         // Register temporary error handler to catch error while container is building.
-        $errorHandler = $this->createTemporaryErrorHandler();
-        $this->registerErrorHandler($errorHandler);
+        $temporaryErrorHandler = $this->createTemporaryErrorHandler();
+        $this->registerErrorHandler($temporaryErrorHandler);
 
-        $config = ConfigFactory::create($this->rootPath, $this->environment);
+        $config = $this->config ?? ConfigFactory::create($this->rootPath, $this->environment);
 
-        $container = new Container(
+        $container = $this->container ?? new Container(
             $config->get('web'),
             $config->get('providers-web'),
             [],
@@ -67,21 +114,30 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         );
 
         // Register error handler with real container-configured dependencies.
-        $this->registerErrorHandler($container->get(ErrorHandler::class), $errorHandler);
+        /** @var ErrorHandler $actualErrorHandler */
+        $actualErrorHandler = $container->get(ErrorHandler::class);
+        $this->registerErrorHandler($actualErrorHandler, $temporaryErrorHandler);
+
+        if ($container instanceof Container) {
+            $container = $container->get(ContainerInterface::class);
+        }
 
         // Run bootstrap
-        $this->runBootstrap($container, $config->get('bootstrap-web'));
+        if ($this->bootstrapGroup !== null) {
+            $this->runBootstrap($container, $config->get($this->bootstrapGroup));
+        }
 
-        $container = $container->get(ContainerInterface::class);
-
-        if ($this->debug) {
+        if ($this->debug && $this->eventGroup !== null) {
             /** @psalm-suppress MixedMethodCall */
-            $container->get(ListenerConfigurationChecker::class)->check($config->get('events-web'));
+            $container->get(ListenerConfigurationChecker::class)->check($config->get($this->eventGroup));
         }
 
         $worker = RoadRunner\Worker::create();
+        /** @var ServerRequestFactoryInterface $serverRequestFactory */
         $serverRequestFactory = $container->get(ServerRequestFactoryInterface::class);
+        /** @var StreamFactoryInterface $streamFactory */
         $streamFactory = $container->get(StreamFactoryInterface::class);
+        /** @var UploadedFileFactoryInterface $uploadsFactory */
         $uploadsFactory = $container->get(UploadedFileFactoryInterface::class);
         $worker = new RoadRunner\Http\PSR7Worker($worker, $serverRequestFactory, $streamFactory, $uploadsFactory);
 
@@ -95,7 +151,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
             try {
                 $response = $application->handle($request);
                 $worker->respond($response);
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
                 $handler = new ThrowableHandler($t);
                 /**
                  * @var ResponseInterface
@@ -105,6 +161,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
                 $worker->respond($response);
             } finally {
                 $application->afterEmit($response ?? null);
+                /** @psalm-suppress MixedMethodCall */
                 $container->get(StateResetter::class)->reset(); // We should reset the state of such services every request.
                 gc_collect_cycles();
             }
@@ -115,7 +172,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
 
     private function createTemporaryErrorHandler(): ErrorHandler
     {
-        $logger = new Logger([new FileTarget(dirname(__DIR__) . '/runtime/logs/app.log')]);
+        $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/app.log")]);
         return new ErrorHandler($logger, new PlainTextRenderer());
     }
 
@@ -133,7 +190,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         $registered->register();
     }
 
-    private function runBootstrap(Container $container, array $bootstrapList): void
+    private function runBootstrap(ContainerInterface $container, array $bootstrapList): void
     {
         (new BootstrapRunner($container, $bootstrapList))->run();
     }

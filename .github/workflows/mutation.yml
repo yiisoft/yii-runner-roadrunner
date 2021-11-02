@@ -44,6 +44,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          extensions: sockets
           ini-values: memory_limit=-1
           coverage: pcov
           tools: composer:v2

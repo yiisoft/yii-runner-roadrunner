@@ -31,17 +31,21 @@
     "require": {
         "php": "^8.0",
         "spiral/roadrunner": "^2.5",
-        "yiisoft/yii-runner": "@dev",
-        "yiisoft/di": "@dev",
         "yiisoft/error-handler": "^1.0",
+        "yiisoft/di": "@dev",
         "yiisoft/log": "^1.0",
-        "yiisoft/log-target-file": "^1.0"        
+        "yiisoft/log-target-file": "^1.0",
+        "yiisoft/yii-event": "^1.0",
+        "yiisoft/yii-runner": "@dev",
+        "yiisoft/yii-web": "^3.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "roave/infection-static-analysis-plugin": "^1.9",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.9"
+        "vimeo/psalm": "^4.9",
+        "yiisoft/dummy-provider": "^1.0",
+        "yiisoft/psr-dummy-provider": "^1.0"
     },
     "autoload": {
         "psr-4": {
