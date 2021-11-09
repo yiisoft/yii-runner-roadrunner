@@ -43,7 +43,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     private ?ContainerInterface $container = null;
     private ?ErrorHandler $temporaryErrorHandler = null;
     private ?string $bootstrapGroup = 'bootstrap-web';
-    private ?string $eventGroup = 'event-web';
+    private ?string $eventsGroup = 'events-web';
 
     public function __construct(string $rootPath, bool $debug, ?string $environment)
     {
@@ -66,17 +66,17 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
-    public function withEvent(string $eventGroup): self
+    public function withEvents(string $eventsGroup): self
     {
         $new = clone $this;
-        $new->eventGroup = $eventGroup;
+        $new->eventsGroup = $eventsGroup;
         return $new;
     }
 
-    public function withoutEvent(): self
+    public function withoutEvents(): self
     {
         $new = clone $this;
-        $new->eventGroup = null;
+        $new->eventsGroup = null;
         return $new;
     }
 
@@ -135,9 +135,9 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
             $this->runBootstrap($container, $config->get($this->bootstrapGroup));
         }
 
-        if ($this->debug && $this->eventGroup !== null) {
+        if ($this->debug && $this->eventsGroup !== null) {
             /** @psalm-suppress MixedMethodCall */
-            $container->get(ListenerConfigurationChecker::class)->check($config->get($this->eventGroup));
+            $container->get(ListenerConfigurationChecker::class)->check($config->get($this->eventsGroup));
         }
 
         $worker = RoadRunner\Worker::create();
