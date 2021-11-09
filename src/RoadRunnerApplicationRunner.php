@@ -41,6 +41,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     private ?string $environment;
     private ?Config $config = null;
     private ?ContainerInterface $container = null;
+    private ?ErrorHandler $temporaryErrorHandler = null;
     private ?string $bootstrapGroup = 'bootstrap-web';
     private ?string $eventGroup = 'event-web';
 
@@ -90,6 +91,13 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     {
         $new = clone $this;
         $new->container = $container;
+        return $new;
+    }
+
+    public function withTemporaryErrorHandler(ErrorHandler $temporaryErrorHandler): self
+    {
+        $new = clone $this;
+        $new->temporaryErrorHandler = $temporaryErrorHandler;
         return $new;
     }
 
@@ -172,6 +180,10 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
 
     private function createTemporaryErrorHandler(): ErrorHandler
     {
+        if ($this->temporaryErrorHandler !== null) {
+            return $this->temporaryErrorHandler;
+        }
+
         $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/app.log")]);
         return new ErrorHandler($logger, new PlainTextRenderer());
     }
