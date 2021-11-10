@@ -31,13 +31,13 @@
     "require": {
         "php": "^8.0",
         "spiral/roadrunner": "^2.5",
-        "yiisoft/error-handler": "^2.0",
         "yiisoft/di": "@dev",
+        "yiisoft/error-handler": "^2.0",
         "yiisoft/log": "^1.0",
         "yiisoft/log-target-file": "^1.0",
         "yiisoft/yii-event": "^1.0",
-        "yiisoft/yii-runner": "@dev",
-        "yiisoft/yii-web": "^3.0@dev"
+        "yiisoft/yii-http": "dev-master",
+        "yiisoft/yii-runner": "@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
