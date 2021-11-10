@@ -31,7 +31,7 @@
     "require": {
         "php": "^8.0",
         "spiral/roadrunner": "^2.5",
-        "yiisoft/error-handler": "^1.0",
+        "yiisoft/error-handler": "^2.0",
         "yiisoft/di": "@dev",
         "yiisoft/log": "^1.0",
         "yiisoft/log-target-file": "^1.0",
