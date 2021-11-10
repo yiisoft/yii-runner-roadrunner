@@ -25,11 +25,11 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Event\ListenerConfigurationChecker;
+use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Runner\BootstrapRunner;
 use Yiisoft\Yii\Runner\ConfigFactory;
 use Yiisoft\Yii\Runner\RunnerInterface;
 use Yiisoft\Yii\Runner\ThrowableHandler;
-use Yiisoft\Yii\Web\Application;
 
 use function gc_collect_cycles;
 use function microtime;
@@ -149,7 +149,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         $uploadsFactory = $container->get(UploadedFileFactoryInterface::class);
         $worker = new RoadRunner\Http\PSR7Worker($worker, $serverRequestFactory, $streamFactory, $uploadsFactory);
 
-        /** @var Application */
+        /** @var Application $application */
         $application = $container->get(Application::class);
         $application->start();
 
