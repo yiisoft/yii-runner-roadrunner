@@ -51,7 +51,7 @@ ini_set('display_errors', 'stderr');
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/preload.php';
 
-(new RoadRunnerApplicationRunner($_ENV['YII_DEBUG'], $_ENV['YII_ENV']))->run();
+(new RoadRunnerApplicationRunner(__DIR__, $_ENV['YII_DEBUG'], $_ENV['YII_ENV']))->run();
 ```
 
 Specify it in your `.rr.yaml`:
