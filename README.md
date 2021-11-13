@@ -44,7 +44,7 @@ Create `worker.php` in your application root directory:
 
 declare(strict_types=1);
 
-use App\Runner\RoadRunnerApplicationRunner;
+use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner;
 
 ini_set('display_errors', 'stderr');
 
