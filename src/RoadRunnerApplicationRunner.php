@@ -35,7 +35,7 @@ use function gc_collect_cycles;
 use function microtime;
 
 /**
- * RoadRunnerApplicationRunner runs the Yii HTTP application for RoadRunner.
+ * `RoadRunnerApplicationRunner` runs the Yii HTTP application for RoadRunner.
  */
 final class RoadRunnerApplicationRunner implements RunnerInterface
 {
