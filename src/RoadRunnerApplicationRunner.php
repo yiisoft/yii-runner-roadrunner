@@ -183,8 +183,6 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
             $container = new Container($containerConfig);
         }
 
-         ??
-
         // Register error handler with real container-configured dependencies.
         /** @var ErrorHandler $actualErrorHandler */
         $actualErrorHandler = $container->get(ErrorHandler::class);
