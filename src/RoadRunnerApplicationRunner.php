@@ -14,6 +14,7 @@ use Psr\Http\Message\UploadedFileFactoryInterface;
 use Throwable;
 use Yiisoft\Config\Config;
 use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -171,13 +172,18 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
 
         $config = $this->config ?? ConfigFactory::create($this->rootPath, $this->environment);
 
-        $container = $this->container ?? new Container(
-            $config->get('web'),
-            $config->get('providers-web'),
-            [],
-            $this->debug,
-            $config->get('delegates-web')
-        );
+        $container = $this->container;
+        if ($container === null) {
+            $containerConfig = ContainerConfig::create()
+                ->withDefinitions($config->get('web'))
+                ->withProviders($config->get('providers-web'))
+                ->withValidate($this->debug)
+                ->withDelegates($config->get('delegates-web'));
+
+            $container = new Container($containerConfig);
+        }
+
+         ??
 
         // Register error handler with real container-configured dependencies.
         /** @var ErrorHandler $actualErrorHandler */
