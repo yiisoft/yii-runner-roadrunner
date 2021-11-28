@@ -14,6 +14,7 @@ use Psr\Http\Message\UploadedFileFactoryInterface;
 use Throwable;
 use Yiisoft\Config\Config;
 use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -34,6 +35,9 @@ use Yiisoft\Yii\Runner\RunnerInterface;
 use function gc_collect_cycles;
 use function microtime;
 
+/**
+ * `RoadRunnerApplicationRunner` runs the Yii HTTP application for RoadRunner.
+ */
 final class RoadRunnerApplicationRunner implements RunnerInterface
 {
     private bool $debug;
@@ -45,6 +49,11 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     private ?string $bootstrapGroup = 'bootstrap-web';
     private ?string $eventsGroup = 'events-web';
 
+    /**
+     * @param string $rootPath The absolute path to the project root.
+     * @param bool $debug Whether the debug mode is enabled.
+     * @param string|null $environment The environment name.
+     */
     public function __construct(string $rootPath, bool $debug, ?string $environment)
     {
         $this->rootPath = $rootPath;
@@ -52,6 +61,13 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         $this->environment = $environment;
     }
 
+    /**
+     * Returns a new instance with the specified bootstrap configuration group name.
+     *
+     * @param string $bootstrapGroup The bootstrap configuration group name.
+     *
+     * @return self
+     */
     public function withBootstrap(string $bootstrapGroup): self
     {
         $new = clone $this;
@@ -59,6 +75,11 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance and disables the use of bootstrap configuration group.
+     *
+     * @return self
+     */
     public function withoutBootstrap(): self
     {
         $new = clone $this;
@@ -66,6 +87,13 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified events configuration group name.
+     *
+     * @param string $eventsGroup The events configuration group name.
+     *
+     * @return self
+     */
     public function withEvents(string $eventsGroup): self
     {
         $new = clone $this;
@@ -73,6 +101,11 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance and disables the use of events configuration group.
+     *
+     * @return self
+     */
     public function withoutEvents(): self
     {
         $new = clone $this;
@@ -80,6 +113,13 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified config instance {@see Config}.
+     *
+     * @param Config $config The config instance.
+     *
+     * @return self
+     */
     public function withConfig(Config $config): self
     {
         $new = clone $this;
@@ -87,6 +127,13 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified container instance {@see ContainerInterface}.
+     *
+     * @param ContainerInterface $container The container instance.
+     *
+     * @return self
+     */
     public function withContainer(ContainerInterface $container): self
     {
         $new = clone $this;
@@ -94,6 +141,16 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified temporary error handler instance {@see ErrorHandler}.
+     *
+     * A temporary error handler is needed to handle the creation of configuration and container instances,
+     * then the error handler configured in your application configuration will be used.
+     *
+     * @param ErrorHandler $temporaryErrorHandler The temporary error handler instance.
+     *
+     * @return self
+     */
     public function withTemporaryErrorHandler(ErrorHandler $temporaryErrorHandler): self
     {
         $new = clone $this;
@@ -102,6 +159,8 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @throws CircularReferenceException|ErrorException|InvalidConfigException
      * @throws NotFoundException|NotInstantiableException
      */
@@ -113,13 +172,16 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
 
         $config = $this->config ?? ConfigFactory::create($this->rootPath, $this->environment);
 
-        $container = $this->container ?? new Container(
-            $config->get('web'),
-            $config->get('providers-web'),
-            [],
-            $this->debug,
-            $config->get('delegates-web')
-        );
+        $container = $this->container;
+        if ($container === null) {
+            $containerConfig = ContainerConfig::create()
+                ->withDefinitions($config->get('web'))
+                ->withProviders($config->get('providers-web'))
+                ->withValidate($this->debug)
+                ->withDelegates($config->get('delegates-web'));
+
+            $container = new Container($containerConfig);
+        }
 
         // Register error handler with real container-configured dependencies.
         /** @var ErrorHandler $actualErrorHandler */
