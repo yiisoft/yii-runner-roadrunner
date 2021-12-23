@@ -15,6 +15,10 @@ use Psr\Http\Message\UploadedFileFactoryInterface;
 use Spiral\RoadRunner;
 use Throwable;
 use Yiisoft\Config\Config;
+use Yiisoft\Config\ConfigPaths;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Di\NotFoundException;
@@ -22,9 +26,6 @@ use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Event\ListenerConfigurationChecker;
@@ -172,7 +173,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
         $temporaryErrorHandler = $this->createTemporaryErrorHandler();
         $this->registerErrorHandler($temporaryErrorHandler);
 
-        $config = $this->config ?? ConfigFactory::create($this->rootPath, $this->environment);
+        $config = $this->config ?? ConfigFactory::create(new ConfigPaths($this->rootPath, 'config'), $this->environment);
         $container = $this->container ?? $this->createDefaultContainer($config);
 
         // Register error handler with real container-configured dependencies.
