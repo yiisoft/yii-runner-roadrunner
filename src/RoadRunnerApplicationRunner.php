@@ -14,7 +14,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Spiral\RoadRunner;
 use Throwable;
-use Yiisoft\Config\Config;
+use Yiisoft\Config\ConfigInterface;
 use Yiisoft\Config\ConfigPaths;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -46,7 +46,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     private bool $debug;
     private string $rootPath;
     private ?string $environment;
-    private ?Config $config = null;
+    private ?ConfigInterface $config = null;
     private ?ContainerInterface $container = null;
     private ?ErrorHandler $temporaryErrorHandler = null;
     private ?string $bootstrapGroup = 'bootstrap-web';
@@ -117,13 +117,13 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     }
 
     /**
-     * Returns a new instance with the specified config instance {@see Config}.
+     * Returns a new instance with the specified config instance {@see ConfigInterface}.
      *
-     * @param Config $config The config instance.
+     * @param ConfigInterface $config The config instance.
      *
      * @return self
      */
-    public function withConfig(Config $config): self
+    public function withConfig(ConfigInterface $config): self
     {
         $new = clone $this;
         $new->config = $config;
@@ -236,7 +236,7 @@ final class RoadRunnerApplicationRunner implements RunnerInterface
     /**
      * @throws ErrorException|InvalidConfigException
      */
-    private function createDefaultContainer(Config $config): Container
+    private function createDefaultContainer(ConfigInterface $config): Container
     {
         $containerConfig = ContainerConfig::create()->withValidate($this->debug);
 
