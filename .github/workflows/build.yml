@@ -45,6 +45,8 @@ jobs:
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
+        env:
+          update: true
         with:
           php-version: ${{ matrix.php }}
           extensions: sockets
