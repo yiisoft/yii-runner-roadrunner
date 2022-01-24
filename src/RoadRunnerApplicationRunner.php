@@ -7,12 +7,10 @@ namespace Yiisoft\Yii\Runner\RoadRunner;
 use ErrorException;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\UploadedFileFactoryInterface;
-use Spiral\RoadRunner;
+use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Throwable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -20,16 +18,13 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Di\NotFoundException;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
-use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
-use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
+use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Http\Application;
-use Yiisoft\Yii\Http\Handler\ThrowableHandler;
 use Yiisoft\Yii\Runner\ApplicationRunner;
 
 use function gc_collect_cycles;
-use function microtime;
 
 /**
  * `RoadRunnerApplicationRunner` runs the Yii HTTP application for RoadRunner.
@@ -37,6 +32,7 @@ use function microtime;
 final class RoadRunnerApplicationRunner extends ApplicationRunner
 {
     private ?ErrorHandler $temporaryErrorHandler = null;
+    private ?PSR7WorkerInterface $psr7Worker = null;
 
     /**
      * @param string $rootPath The absolute path to the project root.
@@ -68,6 +64,20 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
     }
 
     /**
+     * Returns a new instance with the specified PSR-7 worker instance {@see PSR7WorkerInterface}.
+     *
+     * @param PSR7WorkerInterface $worker The PSR-7 worker instance.
+     *
+     * @return self
+     */
+    public function withPsr7Worker(PSR7WorkerInterface $worker): self
+    {
+        $new = clone $this;
+        $new->psr7Worker = $worker;
+        return $new;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws CircularReferenceException|ErrorException|InvalidConfigException|JsonException
@@ -90,38 +100,33 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         $this->runBootstrap($config, $container);
         $this->checkEvents($config, $container);
 
-        $worker = RoadRunner\Worker::create();
-        /** @var ServerRequestFactoryInterface $serverRequestFactory */
-        $serverRequestFactory = $container->get(ServerRequestFactoryInterface::class);
-        /** @var StreamFactoryInterface $streamFactory */
-        $streamFactory = $container->get(StreamFactoryInterface::class);
-        /** @var UploadedFileFactoryInterface $uploadsFactory */
-        $uploadsFactory = $container->get(UploadedFileFactoryInterface::class);
-        $worker = new RoadRunner\Http\PSR7Worker($worker, $serverRequestFactory, $streamFactory, $uploadsFactory);
+        $worker = new RoadRunnerWorker($container, $this->psr7Worker);
 
         /** @var Application $application */
         $application = $container->get(Application::class);
         $application->start();
 
-        while ($request = $worker->waitRequest()) {
-            $request = $request->withAttribute('applicationStartTime', microtime(true));
+        while (true) {
+            $request = $worker->waitRequest();
             $response = null;
+
+            if ($request === null) {
+                break;
+            }
+
+            if ($request instanceof Throwable) {
+                $response = $worker->respondError($request);
+                $this->afterRespond($application, $container, $response);
+                continue;
+            }
+
             try {
                 $response = $application->handle($request);
                 $worker->respond($response);
             } catch (Throwable $t) {
-                $handler = new ThrowableHandler($t);
-                /**
-                 * @var ResponseInterface
-                 * @psalm-suppress MixedMethodCall
-                 */
-                $response = $container->get(ErrorCatcher::class)->process($request, $handler);
-                $worker->respond($response);
+                $response = $worker->respondError($t, $request);
             } finally {
-                $application->afterEmit($response ?? null);
-                /** @psalm-suppress MixedMethodCall */
-                $container->get(StateResetter::class)->reset(); // We should reset the state of such services every request.
-                gc_collect_cycles();
+                $this->afterRespond($application, $container, $response);
             }
         }
 
@@ -135,7 +140,7 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         }
 
         $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/app.log")]);
-        return new ErrorHandler($logger, new PlainTextRenderer());
+        return new ErrorHandler($logger, new HtmlRenderer());
     }
 
     /**
@@ -150,5 +155,16 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         }
 
         $registered->register();
+    }
+
+    private function afterRespond(
+        Application $application,
+        ContainerInterface $container,
+        ?ResponseInterface $response,
+    ): void {
+        $application->afterEmit($response);
+        /** @psalm-suppress MixedMethodCall */
+        $container->get(StateResetter::class)->reset(); // We should reset the state of such services every request.
+        gc_collect_cycles();
     }
 }
