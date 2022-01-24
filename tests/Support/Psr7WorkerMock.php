@@ -52,7 +52,7 @@ final class Psr7WorkerMock implements PSR7WorkerInterface
 
     public function getWorker(): WorkerInterface
     {
-        return new class() implements WorkerInterface {
+        return new class () implements WorkerInterface {
             public function waitPayload(): ?Payload
             {
                 return new Payload(null);
