@@ -33,7 +33,7 @@ final class RoadRunnerWorkerTest extends TestCase
             'error-message' => $errorMessage,
             'request-method' => Method::GET,
             'request-uri' => '/',
-            'request-attribute-exists' => true,
+            'request-attribute-exists' => false,
         ]);
 
         $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock());

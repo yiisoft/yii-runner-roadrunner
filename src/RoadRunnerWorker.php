@@ -60,7 +60,6 @@ final class RoadRunnerWorker
             $errorData = $this->errorHandler->handle($throwable);
             $response = $errorData->addToResponse($this->responseFactory->createResponse(Status::BAD_REQUEST));
         } else {
-            $request = $this->addApplicationStartTimeAttributeToRequest($request);
             $response = $this->errorCatcher->process($request, new ThrowableHandler($throwable));
         }
 
@@ -71,15 +70,9 @@ final class RoadRunnerWorker
     public function waitRequest(): ServerRequestInterface|Throwable|null
     {
         try {
-            $request = $this->worker->waitRequest();
-            return $request === null ? null : $this->addApplicationStartTimeAttributeToRequest($request);
+            return $this->worker->waitRequest()?->withAttribute('applicationStartTime', microtime(true));
         } catch (Throwable $t) {
             return $t;
         }
-    }
-
-    private function addApplicationStartTimeAttributeToRequest(ServerRequestInterface $request): ServerRequestInterface
-    {
-        return $request->withAttribute('applicationStartTime', microtime(true));
     }
 }
