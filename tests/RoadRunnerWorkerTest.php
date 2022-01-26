@@ -24,7 +24,7 @@ final class RoadRunnerWorkerTest extends TestCase
         $worker->respond($this->createResponse());
     }
 
-    public function testRespondErrorWithPassingRequest(): void
+    public function testRespondWithErrorWithPassingRequest(): void
     {
         $errorMessage = 'Some error';
         $throwable = new RuntimeException($errorMessage);
@@ -48,7 +48,7 @@ final class RoadRunnerWorkerTest extends TestCase
         $this->assertSame($body, (string) $response->getBody());
     }
 
-    public function testRespondErrorWithoutPassingRequest(): void
+    public function testRespondWithErrorWithoutPassingRequest(): void
     {
         $headers = [];
         $body = json_encode([

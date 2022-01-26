@@ -75,7 +75,7 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
     /**
      * @depends testCheckGarbageCollector
      */
-    public function testRunWithRunBootstrap(): void
+    public function testRunWithBootstrap(): void
     {
         $runner = $this->runner->withBootstrap('bootstrap-web');
 
@@ -87,7 +87,7 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
     /**
      * @depends testCheckGarbageCollector
      */
-    public function testRunWithCheckEvents(): void
+    public function testRunWithCheckingEvents(): void
     {
         $runner = $this->runner->withCheckingEvents('events-fail');
 
