@@ -155,7 +155,7 @@ In addition to the error handler that is defined in the container, the runner us
 A temporary error handler is needed to handle the creation of configuration and container instances,
 then the error handler configured in your application configuration will be used.
 
-By default, the temporary error handler uses plain text renderer and logging to a file. You can override this as follows:
+By default, the temporary error handler uses HTML renderer and logging to a file. You can override this as follows:
 
 ```php
 /**
@@ -167,6 +167,18 @@ By default, the temporary error handler uses plain text renderer and logging to 
 $runner = $runner->withTemporaryErrorHandler(
     new Yiisoft\ErrorHandler\ErrorHandler($logger, $renderer),
 );
+```
+
+You can also use your own implementation of the `Spiral\RoadRunner\Http\PSR7WorkerInterface`
+(default is a `Spiral\RoadRunner\Http\PSR7Worker`):
+
+```php
+/**
+ * @var Spiral\RoadRunner\Http\PSR7WorkerInterface $psr7Worker
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ */
+
+$runner = $runner->withPsr7Worker($psr7Worker);
 ```
 
 ## Testing
