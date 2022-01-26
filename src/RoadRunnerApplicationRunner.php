@@ -27,7 +27,7 @@ use Yiisoft\Yii\Runner\ApplicationRunner;
 use function gc_collect_cycles;
 
 /**
- * `RoadRunnerApplicationRunner` runs the Yii HTTP application for RoadRunner.
+ * `RoadRunnerApplicationRunner` runs the Yii HTTP application using RoadRunner.
  */
 final class RoadRunnerApplicationRunner extends ApplicationRunner
 {
