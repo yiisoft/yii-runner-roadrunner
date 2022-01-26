@@ -54,7 +54,7 @@ final class RoadRunnerWorker
         $this->worker->respond($response);
     }
 
-    public function respondError(Throwable $throwable, ServerRequestInterface $request = null): ResponseInterface
+    public function respondWithError(Throwable $throwable, ServerRequestInterface $request = null): ResponseInterface
     {
         if ($request === null) {
             $errorData = $this->errorHandler->handle($throwable);

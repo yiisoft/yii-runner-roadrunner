@@ -115,7 +115,7 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
             }
 
             if ($request instanceof Throwable) {
-                $response = $worker->respondError($request);
+                $response = $worker->respondWithError($request);
                 $this->afterRespond($application, $container, $response);
                 continue;
             }
@@ -124,7 +124,7 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
                 $response = $application->handle($request);
                 $worker->respond($response);
             } catch (Throwable $t) {
-                $response = $worker->respondError($t, $request);
+                $response = $worker->respondWithError($t, $request);
             } finally {
                 $this->afterRespond($application, $container, $response);
             }

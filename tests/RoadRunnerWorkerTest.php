@@ -40,7 +40,7 @@ final class RoadRunnerWorkerTest extends TestCase
 
         $this->expectOutputString($this->getResponseData(Status::INTERNAL_SERVER_ERROR, $headers, $body));
 
-        $response = $worker->respondError($throwable, $this->createServerRequest());
+        $response = $worker->respondWithError($throwable, $this->createServerRequest());
 
         $this->assertSame(Status::INTERNAL_SERVER_ERROR, $response->getStatusCode());
         $this->assertSame(Status::TEXTS[Status::INTERNAL_SERVER_ERROR], $response->getReasonPhrase());
@@ -62,7 +62,7 @@ final class RoadRunnerWorkerTest extends TestCase
 
         $this->expectOutputString($this->getResponseData(Status::BAD_REQUEST, $headers, $body));
 
-        $response = $worker->respondError(new RuntimeException('Some error'));
+        $response = $worker->respondWithError(new RuntimeException('Some error'));
 
         $this->assertSame(Status::BAD_REQUEST, $response->getStatusCode());
         $this->assertSame(Status::TEXTS[Status::BAD_REQUEST], $response->getReasonPhrase());
