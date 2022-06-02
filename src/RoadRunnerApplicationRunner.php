@@ -164,7 +164,9 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
     ): void {
         $application->afterEmit($response);
         /** @psalm-suppress MixedMethodCall */
-        $container->get(StateResetter::class)->reset(); // We should reset the state of such services every request.
+        $container
+            ->get(StateResetter::class)
+            ->reset(); // We should reset the state of such services every request.
         gc_collect_cycles();
     }
 }
