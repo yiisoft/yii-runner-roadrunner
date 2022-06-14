@@ -2,7 +2,7 @@
 
 ## 1.1.0 under development
 
-- Enh #26: Add support for `2.0`, `3.0` versions of `psr/log` (rustamwin)
+- Enh #26: Raise `yiisoft/log` version to ^2.0 (rustamwin)
 
 ## 1.0.0 January 26, 2022
 
