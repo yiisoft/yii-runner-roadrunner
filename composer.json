@@ -32,10 +32,10 @@
         "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0|^2.0",
         "yiisoft/di": "^1.0",
-        "yiisoft/error-handler": "^2.0",
+        "yiisoft/error-handler": "^2.1",
         "yiisoft/http": "^1.2",
-        "yiisoft/log": "^1.0",
-        "yiisoft/log-target-file": "^1.0",
+        "yiisoft/log": "^2.0",
+        "yiisoft/log-target-file": "^1.1",
         "yiisoft/yii-http": "^1.0",
         "yiisoft/yii-runner": "^1.0"
     },
@@ -45,7 +45,7 @@
         "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.18",
-        "yiisoft/test-support": "^1.3"
+        "yiisoft/test-support": "^2.0"
     },
     "autoload": {
         "psr-4": {

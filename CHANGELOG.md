@@ -1,8 +1,9 @@
 # Yii Runner RoadRunner Change Log
 
-## 1.0.2 under development
+## 1.1.0 under development
 
-- no changes in this release.
+- Chg #26: Raise packages version:`yiisoft/log` to `^2.0`, `yiisoft/log-target-file` to `^1.1` and
+  `yiisoft/error-handler` to `^2.1` (@rustamwin)
 
 ## 1.0.1 June 17, 2022
 
