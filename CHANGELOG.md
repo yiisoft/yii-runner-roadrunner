@@ -1,6 +1,6 @@
 # Yii Runner RoadRunner Change Log
 
-## 1.1.1 under development
+## 1.1.1 September 04, 2022
 
 - Chg #31: Update the version of the `yiisoft/log-target-file` package to `^1.1|^2.0` in the `require` section of `composer.json` (razonyang)
 
