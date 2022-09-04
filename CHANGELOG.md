@@ -2,7 +2,7 @@
 
 ## 1.1.1 under development
 
-- no changes in this release.
+- Chg #31: Update the version of the `yiisoft/log-target-file` package to `^1.1|^2.0` in the `require` section of `composer.json` (razonyang)
 
 ## 1.1.0 June 17, 2022
 
