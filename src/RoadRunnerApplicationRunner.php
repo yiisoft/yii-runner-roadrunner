@@ -53,8 +53,6 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
      * then the error handler configured in your application configuration will be used.
      *
      * @param ErrorHandler $temporaryErrorHandler The temporary error handler instance.
-     *
-     * @return self
      */
     public function withTemporaryErrorHandler(ErrorHandler $temporaryErrorHandler): self
     {
@@ -67,8 +65,6 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
      * Returns a new instance with the specified PSR-7 worker instance {@see PSR7WorkerInterface}.
      *
      * @param PSR7WorkerInterface $worker The PSR-7 worker instance.
-     *
-     * @return self
      */
     public function withPsr7Worker(PSR7WorkerInterface $worker): self
     {

@@ -15,12 +15,10 @@ use function json_encode;
 
 final class Psr7WorkerMock implements PSR7WorkerInterface
 {
-    private ServerRequestInterface|Throwable|null $request;
     private int $requestCount = 0;
 
-    public function __construct(ServerRequestInterface|Throwable $request = null)
+    public function __construct(private $request = null)
     {
-        $this->request = $request;
     }
 
     public function getRequestCount(): int
@@ -47,7 +45,7 @@ final class Psr7WorkerMock implements PSR7WorkerInterface
             'status' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
             'body' => (string) $response->getBody(),
-        ]);
+        ], JSON_THROW_ON_ERROR);
     }
 
     public function getWorker(): WorkerInterface
