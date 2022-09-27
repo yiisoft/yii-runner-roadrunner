@@ -60,7 +60,7 @@ return [
 
     Application::class => [
         '__construct()' => [
-            'dispatcher' => DynamicReference::to(static fn(ContainerInterface $container) => $container
+            'dispatcher' => DynamicReference::to(static fn (ContainerInterface $container) => $container
                 ->get(MiddlewareDispatcher::class)
                 ->withMiddlewares([
                     static fn () => new class () implements MiddlewareInterface {
