@@ -25,6 +25,6 @@ final class PlainTextRendererMock implements ThrowableRendererInterface
             'request-method' => (string) $request?->getMethod(),
             'request-uri' => (string) $request?->getUri(),
             'request-attribute-exists' => (bool) $request?->getAttribute('applicationStartTime'),
-        ]));
+        ], JSON_THROW_ON_ERROR));
     }
 }
