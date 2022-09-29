@@ -77,11 +77,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                                 ->get(MiddlewareDispatcher::class)
                                 ->withMiddlewares([
                                     static fn () => new class ($throwException) implements MiddlewareInterface {
-                                        private bool $throwException;
-
-                                        public function __construct(bool $throwException)
+                                        public function __construct(private bool $throwException)
                                         {
-                                            $this->throwException = $throwException;
                                         }
 
                                         public function process(
@@ -120,6 +117,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'status' => $status,
             'headers' => $headers,
             'body' => $body,
-        ]);
+        ], JSON_THROW_ON_ERROR);
     }
 }
