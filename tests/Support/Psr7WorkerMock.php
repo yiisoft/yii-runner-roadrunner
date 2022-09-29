@@ -17,7 +17,7 @@ final class Psr7WorkerMock implements PSR7WorkerInterface
 {
     private int $requestCount = 0;
 
-    public function __construct(private $request = null)
+    public function __construct(private ServerRequestInterface|Throwable|null $request = null)
     {
     }
 
