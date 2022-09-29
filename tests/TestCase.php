@@ -72,26 +72,31 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             Application::class => [
                 '__construct()' => [
                     'dispatcher' => DynamicReference::to(
-                        static fn (ContainerInterface $container) => $container
-                            ->get(MiddlewareDispatcher::class)
-                            ->withMiddlewares([
-                                static fn () => new class ($throwException) implements MiddlewareInterface {
-                                    public function __construct(private bool $throwException)
-                                    {
-                                    }
+                        static function (ContainerInterface $container) use ($throwException) {
+                            return $container
+                                ->get(MiddlewareDispatcher::class)
+                                ->withMiddlewares([
+                                    static fn () => new class ($throwException) implements MiddlewareInterface {
+                                        private bool $throwException;
 
-                                    public function process(
-                                        ServerRequestInterface $request,
-                                        RequestHandlerInterface $handler
-                                    ): ResponseInterface {
-                                        if ($this->throwException) {
-                                            throw new Exception('Failure');
+                                        public function __construct(bool $throwException)
+                                        {
+                                            $this->throwException = $throwException;
                                         }
 
-                                        return (new ResponseFactory())->createResponse();
-                                    }
-                                },
-                            ]),
+                                        public function process(
+                                            ServerRequestInterface $request,
+                                            RequestHandlerInterface $handler
+                                        ): ResponseInterface {
+                                            if ($this->throwException) {
+                                                throw new Exception('Failure');
+                                            }
+
+                                            return (new ResponseFactory())->createResponse();
+                                        }
+                                    },
+                                ]);
+                        },
                     ),
                     'fallbackHandler' => Reference::to(NotFoundHandler::class),
                 ],
@@ -115,6 +120,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'status' => $status,
             'headers' => $headers,
             'body' => $body,
-        ], JSON_THROW_ON_ERROR);
+        ]);
     }
 }
