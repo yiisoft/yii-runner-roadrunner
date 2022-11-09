@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use Temporal\DataConverter\DataConverter;
+use Temporal\DataConverter\DataConverterInterface;
+use Temporal\Worker\Transport\Goridge;
+use Temporal\Worker\Transport\RPCConnectionInterface;
 use Temporal\Worker\WorkerOptions;
 use Temporal\WorkerFactory;
 
@@ -35,5 +39,7 @@ return [
         'withSessionResourceId()' => $options['sessionResourceId'],
         'withMaxConcurrentSessionExecutionSize()' => $options['maxConcurrentSessionExecutionSize'],
     ],
+    DataConverterInterface::class => [DataConverter::class, 'createDefault'],
+    RPCConnectionInterface::class => [Goridge::class, 'create'],
     WorkerFactory::class => [WorkerFactory::class, 'create'],
 ];

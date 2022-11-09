@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     'yiisoft/yii-runner-roadrunner' => [
         'temporal' => [
+            'enabled' => false,
             'options' => [
                 'maxConcurrentActivityExecutionSize' => 0,
                 'workerActivitiesPerSecond' => 0,
