@@ -39,7 +39,8 @@ return [
 //        'withSessionResourceId()' => [$options['sessionResourceId']],
         'withMaxConcurrentSessionExecutionSize()' => [$options['maxConcurrentSessionExecutionSize']],
     ],
-    DataConverterInterface::class => [DataConverter::class, 'createDefault'],
-    RPCConnectionInterface::class => [Goridge::class, 'create'],
-    WorkerFactory::class => [WorkerFactory::class, 'create'],
+
+    DataConverterInterface::class => fn() => DataConverter::createDefault(),
+    RPCConnectionInterface::class => fn() => Goridge::create(),
+    WorkerFactory::class => fn() => WorkerFactory::create(),
 ];
