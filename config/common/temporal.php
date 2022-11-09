@@ -40,7 +40,7 @@ return [
         'withMaxConcurrentSessionExecutionSize()' => [$options['maxConcurrentSessionExecutionSize']],
     ],
 
-    DataConverterInterface::class => fn() => DataConverter::createDefault(),
-    RPCConnectionInterface::class => fn() => Goridge::create(),
-    WorkerFactory::class => fn() => WorkerFactory::create(),
+    DataConverterInterface::class => fn () => DataConverter::createDefault(),
+    RPCConnectionInterface::class => fn () => Goridge::create(),
+    WorkerFactory::class => fn () => WorkerFactory::create(),
 ];
