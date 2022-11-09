@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionObject;
 use RuntimeException;
+use Spiral\RoadRunner\Environment\Mode;
 use Yiisoft\Config\Config;
 use Yiisoft\Config\ConfigPaths;
 use Yiisoft\ErrorHandler\ErrorHandler;
@@ -39,17 +40,17 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
     {
         parent::setUp();
 
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $this->worker = new Psr7WorkerMock($this->createServerRequest());
         $this->runner = (new RoadRunnerApplicationRunner(__DIR__ . '/Support', true, null))
             ->withoutBootstrap()
             ->withoutCheckingEvents()
-            ->withPsr7Worker($this->worker)
-        ;
+            ->withPsr7Worker($this->worker);
     }
 
     public function testCheckGarbageCollector(): void
     {
-        $this->assertSame(0, gc_status()['runs']);
+        $runs = gc_status()['runs'];
 
         $this->expectOutputString($this->getResponseData(Status::OK, [], 'OK'));
 
@@ -57,12 +58,9 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
 
         $this->assertSame(2, $this->worker->getRequestCount());
 
-        $this->assertSame(1, gc_status()['runs']);
+        $this->assertSame($runs + 1, gc_status()['runs']);
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithDefaults(): void
     {
         $this->expectOutputString($this->getResponseData(Status::OK, [], 'OK'));
@@ -72,9 +70,6 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         $this->assertSame(2, $this->worker->getRequestCount());
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithBootstrap(): void
     {
         $runner = $this->runner->withBootstrap('bootstrap-web');
@@ -84,9 +79,6 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         $runner->run();
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithCheckingEvents(): void
     {
         $runner = $this->runner->withCheckingEvents('events-fail');
@@ -96,9 +88,6 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         $runner->run();
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithCustomizedConfiguration(): void
     {
         $container = $this->createContainer();
@@ -106,8 +95,7 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         $runner = $this->runner
             ->withContainer($container)
             ->withConfig($this->createConfig())
-            ->withTemporaryErrorHandler($this->createErrorHandler())
-        ;
+            ->withTemporaryErrorHandler($this->createErrorHandler());
 
         $this->expectOutputString($this->getResponseData());
 
@@ -132,9 +120,6 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         );
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithWaitRequestNullReturn(): void
     {
         $worker = new Psr7WorkerMock();
@@ -143,8 +128,7 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
             ->withoutBootstrap()
             ->withoutCheckingEvents()
             ->withPsr7Worker($worker)
-            ->withContainer($container)
-        ;
+            ->withContainer($container);
 
         $this->expectOutputString('');
 
@@ -165,9 +149,6 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         );
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithWaitRequestThrowableInstanceReturn(): void
     {
         $worker = new Psr7WorkerMock(new RuntimeException('Some error'));
@@ -176,19 +157,20 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
             ->withoutBootstrap()
             ->withoutCheckingEvents()
             ->withPsr7Worker($worker)
-            ->withContainer($container)
-        ;
+            ->withContainer($container);
 
-        $this->expectOutputString($this->getResponseData(
-            Status::BAD_REQUEST,
-            [],
-            json_encode([
-                'error-message' => 'Some error',
-                'request-method' => '',
-                'request-uri' => '',
-                'request-attribute-exists' => false,
-            ]),
-        ));
+        $this->expectOutputString(
+            $this->getResponseData(
+                Status::BAD_REQUEST,
+                [],
+                json_encode([
+                    'error-message' => 'Some error',
+                    'request-method' => '',
+                    'request-uri' => '',
+                    'request-attribute-exists' => false,
+                ]),
+            )
+        );
 
         $runner->run();
 
@@ -208,33 +190,29 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         );
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testRunWithFailureDuringRunningProcess(): void
     {
         $container = $this->createContainer(true);
         $runner = $this->runner->withContainer($container);
 
-        $this->expectOutputString($this->getResponseData(
-            Status::INTERNAL_SERVER_ERROR,
-            ['Content-Type' => ['text/plain']],
-            json_encode([
-                'error-message' => 'Failure',
-                'request-method' => Method::GET,
-                'request-uri' => '/',
-                'request-attribute-exists' => true,
-            ]),
-        ));
+        $this->expectOutputString(
+            $this->getResponseData(
+                Status::INTERNAL_SERVER_ERROR,
+                ['Content-Type' => ['text/plain']],
+                json_encode([
+                    'error-message' => 'Failure',
+                    'request-method' => Method::GET,
+                    'request-uri' => '/',
+                    'request-attribute-exists' => true,
+                ]),
+            )
+        );
 
         $runner->run();
 
         $this->assertTrue($this->isStateReset($container));
     }
 
-    /**
-     * @depends testCheckGarbageCollector
-     */
     public function testImmutability(): void
     {
         $this->assertNotSame($this->runner, $this->runner->withBootstrap('bootstrap-web'));

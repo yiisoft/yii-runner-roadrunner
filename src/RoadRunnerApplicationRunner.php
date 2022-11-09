@@ -10,7 +10,12 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
+use Spiral\RoadRunner\Environment;
+use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
+use Temporal\Worker\WorkerOptions;
+use Temporal\WorkerFactory;
 use Throwable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -23,6 +28,7 @@ use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Runner\ApplicationRunner;
+use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
 use function gc_collect_cycles;
 
@@ -33,6 +39,7 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
 {
     private ?ErrorHandler $temporaryErrorHandler = null;
     private ?PSR7WorkerInterface $psr7Worker = null;
+    private bool $isTemporalEnabled = false;
 
     /**
      * @param string $rootPath The absolute path to the project root.
@@ -74,6 +81,16 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
     }
 
     /**
+     * Returns a new instance with enabled temporal support.
+     */
+    public function withEnabledTemporal(bool $value): self
+    {
+        $new = clone $this;
+        $new->isTemporalEnabled = $value;
+        return $new;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws CircularReferenceException|ErrorException|InvalidConfigException|JsonException
@@ -96,37 +113,25 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         $this->runBootstrap($config, $container);
         $this->checkEvents($config, $container);
 
-        $worker = new RoadRunnerWorker($container, $this->psr7Worker);
+        $env = Environment::fromGlobals();
 
-        /** @var Application $application */
-        $application = $container->get(Application::class);
-        $application->start();
-
-        while (true) {
-            $request = $worker->waitRequest();
-            $response = null;
-
-            if ($request === null) {
-                break;
+        if ($env->getMode() === Mode::MODE_TEMPORAL) {
+            if (!$this->isTemporalEnabled) {
+                throw new RuntimeException(
+                    'Temporal support is disabled. You should call `withEnabledTemporal(true)` to enable temporal support.',
+                );
             }
-
-            if ($request instanceof Throwable) {
-                $response = $worker->respondWithError($request);
-                $this->afterRespond($application, $container, $response);
-                continue;
-            }
-
-            try {
-                $response = $application->handle($request);
-                $worker->respond($response);
-            } catch (Throwable $t) {
-                $response = $worker->respondWithError($t, $request);
-            } finally {
-                $this->afterRespond($application, $container, $response);
-            }
+            $this->runTemporal($container);
+            return;
+        }
+        if ($env->getMode() === Mode::MODE_HTTP) {
+            $this->runRoadRunner($container);
+            return;
         }
 
-        $application->shutdown();
+        // Leave support to run the application with built-in php server with: php -S 127.0.0.0:8080 public/index.php
+        $runner = new HttpApplicationRunner($this->rootPath, $this->debug, $this->environment);
+        $runner->run();
     }
 
     private function createTemporaryErrorHandler(): ErrorHandler
@@ -164,5 +169,62 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
             ->get(StateResetter::class)
             ->reset(); // We should reset the state of such services every request.
         gc_collect_cycles();
+    }
+
+    private function runRoadRunner(ContainerInterface $container): void
+    {
+        $worker = new RoadRunnerWorker($container, $this->psr7Worker);
+
+        /** @var Application $application */
+        $application = $container->get(Application::class);
+        $application->start();
+
+        while (true) {
+            $request = $worker->waitRequest();
+            $response = null;
+
+            if ($request === null) {
+                break;
+            }
+
+            if ($request instanceof Throwable) {
+                $response = $worker->respondWithError($request);
+                $this->afterRespond($application, $container, $response);
+                continue;
+            }
+
+            try {
+                $response = $application->handle($request);
+                $worker->respond($response);
+            } catch (Throwable $t) {
+                $response = $worker->respondWithError($t, $request);
+            } finally {
+                $this->afterRespond($application, $container, $response);
+            }
+        }
+
+        $application->shutdown();
+    }
+
+    private function runTemporal(ContainerInterface $container): void
+    {
+        $factory = $container->get(WorkerFactory::class);
+
+        $worker = $factory->newWorker(
+            'default',
+            $container->get(WorkerOptions::class),
+        );
+        $workflows = $container->get('tag@temporal.workflow');
+        $activities = $container->get('tag@temporal.activity');
+
+        foreach ($workflows as $workflow) {
+            $worker->registerWorkflowTypes(get_class($workflow));
+        }
+
+        foreach ($activities as $activity) {
+            $worker->registerActivity(get_class($activity));
+        }
+
+        $factory->run();
     }
 }

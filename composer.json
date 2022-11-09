@@ -34,6 +34,7 @@
         "spiral/roadrunner": "^2.11",
         "spiral/roadrunner-http": "^2.1",
         "spiral/roadrunner-worker": "^2.3",
+        "temporal/sdk": "^2.3",
         "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0|^2.0",
         "yiisoft/di": "^1.0",
@@ -42,7 +43,8 @@
         "yiisoft/log": "^2.0",
         "yiisoft/log-target-file": "^1.1|^2.0",
         "yiisoft/yii-http": "^1.0",
-        "yiisoft/yii-runner": "^1.0"
+        "yiisoft/yii-runner": "^1.0",
+        "yiisoft/yii-runner-http": "^1.1"
     },
     "require-dev": {
         "httpsoft/http-message": "^1.0",
@@ -66,7 +68,11 @@
     },
     "extra": {
         "config-plugin-options": {
-            "build-merge-plan": false
+            "source-directory": "config"
+        },
+        "config-plugin": {
+            "common": "common/*.php",
+            "params": "params.php"
         }
     },
     "config": {
