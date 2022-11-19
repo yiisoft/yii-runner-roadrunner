@@ -222,11 +222,11 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         $activities = $container->get('tag@temporal.activity');
 
         foreach ($workflows as $workflow) {
-            $worker->registerWorkflowTypes(get_class($workflow));
+            $worker->registerWorkflowTypes($workflow::class);
         }
 
         foreach ($activities as $activity) {
-            $worker->registerActivity(get_class($activity));
+            $worker->registerActivity($activity::class);
         }
 
         $factory->run();
