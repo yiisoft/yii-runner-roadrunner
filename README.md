@@ -181,6 +181,78 @@ You can also use your own implementation of the `Spiral\RoadRunner\Http\PSR7Work
 $runner = $runner->withPsr7Worker($psr7Worker);
 ```
 
+## Temporal
+
+Temporal is a distributed, scalable, durable, and highly available orchestration engine used to execute asynchronous long-running business logic in a scalable and resilient way.
+
+Explore more about Temporal on the official website https://temporal.io and in the sdk repository: https://github.com/temporalio/sdk-php.
+
+[//]: # (If you want to add support for Temporal you need to install the SDK and configure workflows and activities.)
+
+### Installation
+
+```shell
+composer require temporal/sdk
+```
+
+### Configuration
+
+Temporal has at least two main class types: Activity and Workflow.
+Any activity must have the attribute `\Temporal\Activity\ActivityInterface`:
+
+```php
+namespace App\Activity;
+
+#[\Temporal\Activity\ActivityInterface]
+class MyActivity
+{
+   // ...
+}
+```
+
+Any workflow must have the attribute `\Temporal\Workflow\WorkflowInterface`.
+
+```php
+namespace App\Workflow;
+
+#[\Temporal\Workflow\WorkflowInterface]
+class MyWorkflow
+{
+   // ...
+}
+
+```
+
+To make the temporal engine see your activities and workflows you should configure the dependency injection container.
+Add the tags `tag@temporal.activity` and `tag@temporal.workflow` to your services:
+
+```php
+// config/common/temporal.php
+
+return [
+    'tag@temporal.activity' => [
+        \App\Activity\MyActivity::class,
+    ],
+    'tag@temporal.workflow' => [
+        \App\Workflow\MyWorkflow::class,
+    ],
+]
+```
+
+> If you use not `yiisoft/di` as a container, make sure that 
+> `$container->get('tag@temporal.activity')` and `$container->get('tag@temporal.workflow')`
+> return all of your workflows and activities.
+
+The last two things are to call `withEnabledTemporal(true)` on the `RoadRunnerApplicationRunner` and to add the following snippet to `config/params.php`:
+
+```php
+'yiisoft/yii-runner-roadrunner' => [
+    'temporal' => [
+        'enabled' => true,
+    ]
+]
+```
+
 ## Testing
 
 ### Unit testing
