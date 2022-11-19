@@ -34,7 +34,6 @@
         "spiral/roadrunner": "^2.11",
         "spiral/roadrunner-http": "^2.1",
         "spiral/roadrunner-worker": "^2.3",
-        "temporal/sdk": "^2.3",
         "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0|^2.0",
         "yiisoft/di": "^1.0",
@@ -55,6 +54,9 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.18",
         "yiisoft/test-support": "^3.0"
+    },
+    "suggest": {
+        "temporal/sdk": "Add Temporal support"
     },
     "autoload": {
         "psr-4": {
