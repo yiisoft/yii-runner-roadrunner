@@ -212,13 +212,26 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
 
     private function runTemporal(ContainerInterface $container): void
     {
+        /**
+         * @var WorkerFactory $factory
+         */
         $factory = $container->get(WorkerFactory::class);
+        /**
+         * @var WorkerOptions $workerOptions
+         */
+        $workerOptions = $container->get(WorkerOptions::class);
 
         $worker = $factory->newWorker(
             'default',
-            $container->get(WorkerOptions::class),
+            $workerOptions,
         );
+        /**
+         * @var object[] $workflows
+         */
         $workflows = $container->get('tag@temporal.workflow');
+        /**
+         * @var object[] $activities
+         */
         $activities = $container->get('tag@temporal.activity');
 
         foreach ($workflows as $workflow) {
