@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Runner\RoadRunner;
 
 use ErrorException;
+use Exception;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -85,6 +86,9 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
      */
     public function withEnabledTemporal(bool $value): self
     {
+        if (!$this->isTemporalSDKInstalled()) {
+            throw new Exception('Temporal SDK is not installed. To install the SDK run `composer require temporal/sdk`');
+        }
         $new = clone $this;
         $new->isTemporalEnabled = $value;
         return $new;
@@ -226,5 +230,10 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         }
 
         $factory->run();
+    }
+
+    private function isTemporalSDKInstalled(): bool
+    {
+        return class_exists(WorkerFactory::class);
     }
 }
