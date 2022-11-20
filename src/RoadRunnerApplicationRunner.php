@@ -87,7 +87,7 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
     public function withEnabledTemporal(bool $value): self
     {
         if (!$this->isTemporalSDKInstalled()) {
-            throw new Exception('Temporal SDK is not installed. To install the SDK run `composer require temporal/sdk`');
+            throw new Exception('Temporal SDK is not installed. To install the SDK run `composer require temporal/sdk`.');
         }
         $new = clone $this;
         $new->isTemporalEnabled = $value;

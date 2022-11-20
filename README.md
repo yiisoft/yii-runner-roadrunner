@@ -239,7 +239,7 @@ return [
 ]
 ```
 
-> If you use not `yiisoft/di` as a container, make sure that 
+> If you use another container instead of `yiisoft/di`, make sure that 
 > `$container->get('tag@temporal.activity')` and `$container->get('tag@temporal.workflow')`
 > return all of your workflows and activities.
 
