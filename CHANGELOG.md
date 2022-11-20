@@ -1,9 +1,9 @@
 # Yii Runner RoadRunner Change Log
 
-## 1.1.2 under development
+## 1.1.2 November 20, 2022
 
-- Enh #35: Explicitly add transitive dependencies (@xepozz)
 - Chg #38: Add support for yiisoft/definitions 3.0 (@samdark)
+- Enh #35: Explicitly add transitive dependencies (@xepozz)
 
 ## 1.1.1 September 04, 2022
 
