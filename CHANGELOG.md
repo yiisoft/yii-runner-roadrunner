@@ -3,6 +3,7 @@
 ## 1.1.2 under development
 
 - Enh #35: Explicitly add transitive dependencies (@xepozz)
+- Chg #38: Add support for yiisoft/definitions 3.0 (@samdark)
 
 ## 1.1.1 September 04, 2022
 
