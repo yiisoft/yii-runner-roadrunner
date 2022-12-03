@@ -3,6 +3,7 @@
 ## 1.1.2 under development
 
 - Enh #39: Add temporal support (@xepozz)
+- Enh #35: Add composer require checker into CI (@xepozz)
 
 ## 1.1.1 September 04, 2022
 
