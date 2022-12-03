@@ -4,7 +4,6 @@
 
 - Enh #39: Add temporal support (@xepozz)
 - Enh #35: Add composer require checker into CI (@xepozz)
-- no changes in this release.
 
 ## 1.1.2 November 20, 2022
 
