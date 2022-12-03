@@ -71,7 +71,8 @@
     },
     "extra": {
         "config-plugin-options": {
-            "source-directory": "config"
+            "source-directory": "config",
+            "build-merge-plan": false
         },
         "config-plugin": {
             "common": "common/*.php",
