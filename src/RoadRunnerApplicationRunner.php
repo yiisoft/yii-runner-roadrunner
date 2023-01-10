@@ -41,7 +41,7 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
      */
     public function __construct(string $rootPath, bool $debug, ?string $environment)
     {
-        parent::__construct($rootPath, $debug, $environment);
+        parent::__construct($rootPath, $debug, 'web', $environment);
         $this->bootstrapGroup = 'bootstrap-web';
         $this->eventsGroup = 'events-web';
     }
@@ -85,14 +85,14 @@ final class RoadRunnerApplicationRunner extends ApplicationRunner
         $temporaryErrorHandler = $this->createTemporaryErrorHandler();
         $this->registerErrorHandler($temporaryErrorHandler);
 
-        $config = $this->getConfig();
-        $container = $this->getContainer($config, 'web');
+        $container = $this->getContainer();
 
         // Register error handler with real container-configured dependencies.
         /** @var ErrorHandler $actualErrorHandler */
         $actualErrorHandler = $container->get(ErrorHandler::class);
         $this->registerErrorHandler($actualErrorHandler, $temporaryErrorHandler);
 
+        $config = $this->getConfig();
         $this->runBootstrap($config, $container);
         $this->checkEvents($config, $container);
 

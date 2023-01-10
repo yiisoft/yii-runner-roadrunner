@@ -1,8 +1,8 @@
 # Yii Runner RoadRunner Change Log
 
-## 1.1.2 under development
+## 1.2.0 under development
 
-- Enh: Add composer require checker into CI
+- Enh #49: Adapt to `yiisoft/yii-runner` of version `^2.0` (@vjik)
 
 ## 1.1.1 September 04, 2022
 
