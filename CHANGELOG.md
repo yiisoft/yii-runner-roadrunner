@@ -3,6 +3,7 @@
 ## 1.2.0 under development
 
 - Enh #49: Adapt to `yiisoft/yii-runner` of version `^2.0` (@vjik)
+
 ## 1.1.3 under development
 
 - no changes in this release.
