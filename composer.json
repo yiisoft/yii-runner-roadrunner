@@ -37,7 +37,7 @@
         "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0|^2.0|^3.0",
         "yiisoft/di": "^1.0",
-        "yiisoft/error-handler": "^2.1",
+        "yiisoft/error-handler": "^3.0",
         "yiisoft/http": "^1.2",
         "yiisoft/log": "^2.0",
         "yiisoft/log-target-file": "^1.1|^2.0",
