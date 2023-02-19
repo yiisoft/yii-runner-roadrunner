@@ -10,9 +10,14 @@ return [
                 'params.php',
             ],
         ],
-        'web' => [
+        'params-web' => [
             '/' => [
-                'web.php',
+                'params.php',
+            ],
+        ],
+        'di-web' => [
+            '/' => [
+                'di-web.php',
             ],
         ],
         'events-web' => [
@@ -25,14 +30,14 @@ return [
                 'events-fail.php',
             ],
         ],
-        'providers-web' => [
+        'di-providers-web' => [
             '/' => [
-                'providers-web.php',
+                'di-providers-web.php',
             ],
         ],
-        'delegates-web' => [
+        'di-delegates-web' => [
             '/' => [
-                'delegates-web.php',
+                'di-delegates-web.php',
             ],
         ],
         'bootstrap-web' => [
