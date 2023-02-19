@@ -1,10 +1,13 @@
 # Yii Runner RoadRunner Change Log
 
+## 2.0.1 under development
+
+- no changes in this release.
+
 ## 2.0.0 February 19, 2023
 
 - Chg #49, 52: Raise required version of `yiisoft/error-handler` to `^3.0`, `yiisoft/log-target-file` to `^3.0`
-  and `yiisoft/yii-runner` to `^2.0` (@vjik)
-- Enh #49: Adapt to `yiisoft/yii-runner` of version `^2.0` (@vjik)
+  and `yiisoft/yii-runner` to `^2.0` 
 - Enh #52: Add ability to configure all config group names (@vjik)
 - Enh #52: Add parameter `$checkEvents` to `RoadRunnerApplicationRunner` constructor (@vjik)
 - Enh #52: In the `RoadRunnerApplicationRunner` constructor make parameter "debug" optional, default `false` (@vjik)
