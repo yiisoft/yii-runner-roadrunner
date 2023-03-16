@@ -61,8 +61,9 @@ require_once __DIR__ . '/autoload.php';
 Specify it in your `.rr.yaml`:
 
 ```yaml
+version: '2.7'
 server:
-    command: "php /worker.php"
+    command: "php ./worker.php"
 
 rpc:
     listen: tcp://127.0.0.1:6001
@@ -74,19 +75,18 @@ http:
         max_jobs: 64
     middleware: ["static", "headers"]
     static:
-        dir:   "/public"
+        dir:   "./public"
         forbid: [".php", ".htaccess"]
     headers:
         response:
             "Cache-Control": "no-cache"
-
 reload:
     interval: 1s
     patterns: [ ".php" ]
     services:
         http:
             recursive: true
-            dirs: [ "/" ]
+            dirs: [ "." ]
 
 logs:
     mode: production
@@ -96,7 +96,7 @@ logs:
 Run RoadRunner with the config specified:
 
 ```
-./vendor/bin/rr serve -c ./.rr.yaml
+./rr serve
 ```
 
 ### Additional configuration
