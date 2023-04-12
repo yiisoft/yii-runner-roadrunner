@@ -61,7 +61,7 @@ require_once __DIR__ . '/autoload.php';
 Specify it in your `.rr.yaml`:
 
 ```yaml
-version: '2.7'
+version: '3.0'
 server:
     command: "php ./worker.php"
 
@@ -71,8 +71,8 @@ rpc:
 http:
     address: :8082
     pool:
-        num_workers: 4
-        max_jobs: 64
+        num_workers: 8
+        debug: false
     middleware: ["static", "headers"]
     static:
         dir:   "./public"
@@ -80,18 +80,15 @@ http:
     headers:
         response:
             "Cache-Control": "no-cache"
-reload:
-    interval: 1s
-    patterns: [ ".php" ]
-    services:
-        http:
-            recursive: true
-            dirs: [ "." ]
 
 logs:
     mode: production
     level: warn
 ```
+
+> **Note**:
+> Official [configuration reference](https://roadrunner.dev/docs/intro-config/). You can also activate `RoadRunner`
+> schema in your IDE to get autocompletion hints.
 
 Run RoadRunner with the config specified:
 
