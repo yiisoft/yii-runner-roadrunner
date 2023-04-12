@@ -61,7 +61,7 @@ require_once __DIR__ . '/autoload.php';
 Specify it in your `.rr.yaml`:
 
 ```yaml
-version: '3.0'
+version: '3'
 server:
     command: "php ./worker.php"
 
