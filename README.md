@@ -72,6 +72,8 @@ http:
     address: :8082
     pool:
         num_workers: 8
+        # Debug mode for the pool. In this mode, pool will not pre-allocate the worker.
+        # Worker (only 1, num_workers ignored) will be allocated right after the request arrived.
         debug: false
     middleware: ["static", "headers"]
     static:
