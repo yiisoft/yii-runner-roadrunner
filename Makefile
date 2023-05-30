@@ -12,7 +12,7 @@ down:	## Stop and remove containers, networks
 start:	## Start services
 	docker-compose -f tests/Docker/docker-compose.yml up -d
 
-run:	## Enter the container with the application
+sh:	## Enter the container with the application
 	docker exec -it yii-runner-roadrunner sh
 
 test:	## Run tests. Params: {{ v=8.1 }}. Default latest PHP 8.1
