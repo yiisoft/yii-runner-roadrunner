@@ -9,6 +9,7 @@ use Grpc\ChannelCredentials;
 use PHPUnit\Framework\TestCase;
 use Service\Message;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\Grpc\EchoClient;
+
 use const Grpc\STATUS_OK;
 
 final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
@@ -17,8 +18,6 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
      * Testing a simple request over an insecure connection
      *
      * @throws Exception
-     *
-     * @return void
      */
     public function testSimpleInsecureRequest(): void
     {

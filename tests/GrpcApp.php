@@ -15,6 +15,6 @@ $application = new RoadRunnerGrpcApplicationRunner(
     debug: true
 );
 $application->services = [
-    EchoInterface::class => EchoService::class
+    EchoInterface::class => EchoService::class,
 ];
 $application->run();
