@@ -69,7 +69,7 @@ logs:
     # Path to the file
     #
     # Default: It uses <processname>-lumberjack.log name in the os tempdir if empty.
-    log_output: "./tests/runtime/logs/rr.log"
+    log_output: "./tests/Support/runtime/logs/rr.log"
 
     # Max file size in MB
     #
