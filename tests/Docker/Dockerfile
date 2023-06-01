@@ -8,8 +8,8 @@ RUN apk add git libzip-dev autoconf g++ make linux-headers
 RUN docker-php-ext-install zip sockets
 
 # Install PHP extensions from PECL
-RUN pecl install xdebug pcov \
-    && docker-php-ext-enable xdebug pcov
+RUN pecl install xdebug pcov grpc protobuf \
+    && docker-php-ext-enable xdebug pcov grpc protobuf
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
@@ -24,4 +24,4 @@ WORKDIR /app
 
 RUN composer update --prefer-dist --no-interaction
 
-CMD ["sleep", "infinity"]
+ENTRYPOINT ["rr", "-d", "serve"]
