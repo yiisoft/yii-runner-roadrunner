@@ -30,3 +30,8 @@ jobs:
         ['ubuntu-latest', 'windows-latest']
       php: >-
         ['8.0', '8.1', '8.2']
+    steps:
+      - name: Get RoadRunner binary
+        run: /vendor/bin/rr get-binary
+      - name: Start RoadRunner
+        run: rr serve
