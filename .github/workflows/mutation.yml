@@ -45,10 +45,14 @@ jobs:
         run: composer update --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Get RoadRunner binary
-        run: vendor/bin/rr get-binary && rr -d serve
+        run: |
+          vendor/bin/rr get-binary
+          cp ./rr /usr/local/bin/rr
+
+      - name: Start RoadRunner
+        run: rr -s -w=$(pwd) serve &
 
       - name: Run infection
-        run: |
-          vendor/bin/roave-infection-static-analysis-plugin -j2 --ignore-msi-with-no-mutations --only-covered
+        run: vendor/bin/roave-infection-static-analysis-plugin -j2 --ignore-msi-with-no-mutations --only-covered
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
