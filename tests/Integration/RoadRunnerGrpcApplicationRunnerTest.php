@@ -21,7 +21,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
      */
     public function testSimpleInsecureRequest(): void
     {
-        $client = new EchoClient('0.0.0.0:9001', [
+        $client = new EchoClient('127.0.0.1:9001', [
             'credentials' => ChannelCredentials::createInsecure(),
         ]);
 
@@ -31,7 +31,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
         /** @var Message $response */
         [$response, $status] = $client->Ping($message)->wait();
 
-        $this->assertSame(STATUS_OK, $status->code);
+        $this->assertSame(STATUS_OK, $status->code, $status->details);
         $this->assertSame('PONG', $response->getMsg());
     }
 }
