@@ -16,7 +16,7 @@ class Message extends \Google\Protobuf\Internal\Message
     /**
      * Generated from protobuf field <code>string msg = 1;</code>
      */
-    private $msg = '';
+    private string $msg = '';
 
     /**
      * Constructor.
