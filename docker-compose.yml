@@ -5,9 +5,9 @@ services:
     container_name: yii-runner-roadrunner
     hostname: yii-runner-roadrunner
     build:
-      context: ../..
+      context: .
       dockerfile: tests/Docker/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.1}
     volumes:
-      - ../..:/app
+      - .:/app
