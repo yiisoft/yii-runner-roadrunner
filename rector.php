@@ -13,6 +13,11 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/tests',
     ]);
 
+    $rectorConfig->skip([
+        __DIR__ . '/tests/Support/Grpc/GPBMetadata',
+        __DIR__ . '/tests/Support/Grpc/Service',
+    ]);
+
     // register a single rule
     $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
 
