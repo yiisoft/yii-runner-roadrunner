@@ -1,3 +1,5 @@
+# Important! Do not use this image in production!
+
 ARG PHP_VERSION
 FROM --platform=linux/amd64 php:${PHP_VERSION}-cli-alpine
 
@@ -22,6 +24,6 @@ COPY --from=spiralscout/roadrunner:2.12.3 /usr/bin/rr /usr/local/bin/rr
 ADD . /app
 WORKDIR /app
 
-RUN composer update --prefer-dist --no-interaction
+RUN composer install --prefer-dist --no-interaction
 
 ENTRYPOINT ["rr", "-d", "serve"]

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  yii-runner-roadrunner:
+    container_name: yii-runner-roadrunner
+    hostname: yii-runner-roadrunner
+    build:
+      context: .
+      dockerfile: tests/Docker/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.1}
+    volumes:
+      - .:/app
