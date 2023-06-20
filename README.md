@@ -44,13 +44,13 @@ Create `worker.php` in your application root directory:
 
 declare(strict_types=1);
 
-use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner;
+use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner;
 
 ini_set('display_errors', 'stderr');
 
 require_once __DIR__ . '/autoload.php';
 
-(new RoadRunnerApplicationRunner(
+(new RoadRunnerHttpApplicationRunner(
     rootPath: __DIR__, 
     debug: $_ENV['YII_DEBUG'], 
     checkEvents: $_ENV['YII_DEBUG'], 
@@ -100,7 +100,7 @@ Run RoadRunner with the config specified:
 
 ### Additional configuration
 
-By default, the `RoadRunnerApplicationRunner` is configured to work with Yii application templates and follows the
+By default, the `RoadRunnerHttpApplicationRunner` is configured to work with Yii application templates and follows the
 [config groups convention](https://github.com/yiisoft/docs/blob/master/022-config-groups.md).
 
 You can override the default configuration using constructor parameters and immutable setters.
@@ -142,7 +142,7 @@ If the configuration instance settings differ from the default you can specify a
 ```php
 /**
  * @var Yiisoft\Config\ConfigInterface $config
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withConfig($config);
@@ -154,7 +154,7 @@ of the `Psr\Container\ContainerInterface`:
 ```php
 /**
  * @var Psr\Container\ContainerInterface $container
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withContainer($container);
@@ -170,7 +170,7 @@ By default, the temporary error handler uses HTML renderer and logging to a file
 /**
  * @var Psr\Log\LoggerInterface $logger
  * @var Yiisoft\ErrorHandler\Renderer\PlainTextRenderer $renderer
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withTemporaryErrorHandler(
@@ -184,7 +184,7 @@ You can also use your own implementation of the `Spiral\RoadRunner\Http\PSR7Work
 ```php
 /**
  * @var Spiral\RoadRunner\Http\PSR7WorkerInterface $psr7Worker
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withPsr7Worker($psr7Worker);

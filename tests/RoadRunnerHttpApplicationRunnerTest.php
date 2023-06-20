@@ -24,14 +24,14 @@ use Yiisoft\Yii\Http\Event\AfterRequest;
 use Yiisoft\Yii\Http\Event\ApplicationShutdown;
 use Yiisoft\Yii\Http\Event\ApplicationStartup;
 use Yiisoft\Yii\Http\Event\BeforeRequest;
-use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner;
+use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\PlainTextRendererMock;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\Psr7WorkerMock;
 
 use function gc_status;
 use function json_encode;
 
-final class RoadRunnerApplicationRunnerTest extends TestCase
+final class RoadRunnerHttpApplicationRunnerTest extends TestCase
 {
     public function testCheckGarbageCollector(): void
     {
@@ -252,8 +252,8 @@ final class RoadRunnerApplicationRunnerTest extends TestCase
         bool $checkEvents = false,
         string $bootstrapGroup = 'non-exists',
         string $eventsGroup = 'events-web',
-    ): RoadRunnerApplicationRunner {
-        return (new RoadRunnerApplicationRunner(
+    ): RoadRunnerHttpApplicationRunner {
+        return (new RoadRunnerHttpApplicationRunner(
             __DIR__ . '/Support',
             debug: true,
             checkEvents: $checkEvents,
