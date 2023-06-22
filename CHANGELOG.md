@@ -3,6 +3,7 @@
 ## 2.0.1 under development
 
 - Chg #23: Rename `RoadRunnerApplicationRunner` to `RoadRunnerHttpApplicationRunner` (@s1lver)
+- Chg #61: Increased minimum PHP version to 8.1 (@s1lver)
 
 ## 2.0.0 February 19, 2023
 
