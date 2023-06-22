@@ -55,4 +55,6 @@ jobs:
         run: rr -s -w=$(pwd) serve &
 
       - name: Run tests with code coverage
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml --colors=always --configuration phpunit.xml.dist
+        run: |
+          php -i | grep grpc
+          vendor/bin/phpunit --coverage-clover=coverage.xml --colors=always --configuration phpunit.xml.dist
