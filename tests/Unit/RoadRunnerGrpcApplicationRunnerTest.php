@@ -44,7 +44,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
             ]
         );
         $relay->shouldReceive('send')->once()->withArgs(function (Frame $frame) {
-            return $frame->payload === '{}'.$this->packMessage('PONG');
+            return $frame->payload === '{}' . $this->packMessage('PONG');
         });
 
         $instance = $this
@@ -61,9 +61,9 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
 
     private function createRunner(): RoadRunnerGrpcApplicationRunner
     {
-        return (new RoadRunnerGrpcApplicationRunner(
+        return new RoadRunnerGrpcApplicationRunner(
             rootPath: __DIR__ . '/Support'
-        ));
+        );
     }
 
     protected function createRelay(string $body, array $header): RelayInterface
@@ -73,7 +73,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
 
         $relay = Mockery::mock(RelayInterface::class);
         $relay->shouldReceive('waitFrame')->once()->andReturn(
-            new Frame($header.$body, [mb_strlen($header)])
+            new Frame($header . $body, [mb_strlen($header)])
         );
 
         $header = json_encode(['stop' => true]);
