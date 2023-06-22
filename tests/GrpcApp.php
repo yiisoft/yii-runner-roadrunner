@@ -8,13 +8,14 @@ use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\Grpc\EchoService;
 
 ini_set('display_errors', 'stderr');
 
-require_once dirname(__DIR__) . '/vendor/autoload.php'; //NOSONAR
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $application = new RoadRunnerGrpcApplicationRunner(
     rootPath: __DIR__,
     debug: true
 );
-$application->services = [
-    EchoInterface::class => EchoService::class,
-];
-$application->run();
+$application
+    ->setServices([
+        EchoInterface::class => EchoService::class,
+    ])
+    ->run();

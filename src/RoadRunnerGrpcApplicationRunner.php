@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Runner\RoadRunner;
 
+use Spiral\RoadRunner\GRPC\Invoker;
 use Spiral\RoadRunner\GRPC\InvokerInterface;
 use Spiral\RoadRunner\GRPC\Server;
 use Spiral\RoadRunner\GRPC\ServiceInterface;
@@ -15,10 +16,10 @@ use Yiisoft\Yii\Runner\ApplicationRunner;
  */
 final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 {
-    public ?InvokerInterface $invoker = null;
+    private ?InvokerInterface $invoker = null;
     public bool $workerInterceptSideEffects = true;
-    public array $services = [];
-    private ?Worker $worker;
+    private array $services = [];
+    private ?Worker $worker = null;
 
     /**
      * @param string $rootPath The absolute path to the project root.
@@ -70,31 +71,70 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
             $nestedParamsGroups,
             $nestedEventsGroups,
         );
-
-        $this->worker = Worker::create($this->workerInterceptSideEffects);
     }
 
     public function run(): void
     {
-        $server = new Server($this->invoker, ['debug' => $this->debug]);
+        $server = new Server($this->getInvoker(), ['debug' => $this->debug]);
 
         /**
          * @var class-string<ServiceInterface> $interface
          * @var ServiceInterface $service
          */
-        foreach ($this->services as $interface => $service) {
+        foreach ($this->getServices() as $interface => $service) {
             $server->registerService($interface, new $service());
         }
 
-        $server->serve($this->worker, static function () {
+        $server->serve($this->getWorker(), static function () {
             gc_collect_cycles();
         });
     }
 
+    /**
+     * Returns a new instance with the specified gRPC worker instance
+     * @param Worker $worker
+     *
+     * @return $this
+     */
     public function withWorker(Worker $worker): self
     {
         $instance = clone $this;
         $instance->worker = $worker;
+
         return $instance;
+    }
+
+    /**
+     * Transmitted services for registration gRPC server
+     *
+     * @param array $services Services array (key-value pairs)
+     * ```php
+     * [
+     *      ServiceInterface::class => Service::class
+     * ]
+     * ```
+     *
+     * @return $this
+     */
+    public function setServices(array $services): self
+    {
+        $this->services = $services;
+
+        return $this;
+    }
+
+    public function getServices(): array
+    {
+        return $this->services;
+    }
+
+    public function getWorker(): Worker
+    {
+        return $this->worker ?? Worker::create($this->workerInterceptSideEffects);
+    }
+
+    public function getInvoker(): InvokerInterface
+    {
+        return $this->invoker ?? new Invoker();
     }
 }
