@@ -18,12 +18,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # Install RoadRunner
-COPY --from=spiralscout/roadrunner:2.12.3 /usr/bin/rr /usr/local/bin/rr
+COPY --from=spiralscout/roadrunner:2023.1.5 /usr/bin/rr /usr/local/bin/rr
 
 # Set up work directory
 ADD . /app
 WORKDIR /app
 
-RUN composer install --prefer-dist --no-interaction
+RUN composer update --prefer-dist --no-interaction
 
 ENTRYPOINT ["rr", "-d", "serve"]

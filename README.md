@@ -19,7 +19,7 @@ The package contains a bootstrap for running Yii3 applications using [RoadRunner
 
 ## Requirements
 
-- PHP 8.0 or higher.
+- PHP 8.1 or higher.
 
 ## Installation
 
