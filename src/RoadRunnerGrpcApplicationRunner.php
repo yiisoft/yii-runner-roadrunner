@@ -92,7 +92,6 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 
     /**
      * Returns a new instance with the specified gRPC worker instance
-     * @param Worker $worker
      *
      * @return $this
      */

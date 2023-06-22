@@ -69,7 +69,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
     protected function createRelay(string $body, array $header): RelayInterface
     {
         $body = $this->packMessage($body);
-        $header = json_encode($header);
+        $header = json_encode($header, JSON_THROW_ON_ERROR);
 
         $relay = Mockery::mock(RelayInterface::class);
         $relay->shouldReceive('waitFrame')->once()->andReturn(
