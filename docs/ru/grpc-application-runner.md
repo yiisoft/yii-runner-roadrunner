@@ -1,12 +1,12 @@
-# gRPC application runner for RoadRunner
+# Запуск gRPC приложения для RoadRunner
 
 Yii RoadRunner Runner поддерживает запуск сервисов использующие протокол [gRPC](https://grpc.io) через `RoadRunnerGrpcApplicationRunner`.
 
-> Для поддержки PHP 8.2 используйте расширение `grpc` >= 1.56.0
+> Обратите внимание! Для поддержки PHP 8.2 используйте расширение `grpc` >= 1.56.0
 
 ## Основное использование
 
-Для примера возьмем сервис `Pinger` описанный в документации https://roadrunner.dev/docs/plugins-grpc
+Для примера возьмем сервис `Pinger` описанный в [документации](https://roadrunner.dev/docs/plugins-grpc)
 
 ### Генерация DTO и сервисного интерфейса
 
