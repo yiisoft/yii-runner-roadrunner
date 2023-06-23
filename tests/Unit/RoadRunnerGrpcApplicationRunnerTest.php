@@ -62,7 +62,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
     private function createRunner(): RoadRunnerGrpcApplicationRunner
     {
         return new RoadRunnerGrpcApplicationRunner(
-            rootPath: __DIR__ . '/Support'
+            rootPath: dirname(__DIR__) . '/Support'
         );
     }
 
