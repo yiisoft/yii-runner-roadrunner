@@ -15,15 +15,26 @@ build:
           - php-scrutinizer-run
 
     phpunit:
+      services:
+        roadrunner:
+          image: spiralscout/roadrunner:2023.1.5
+          ports:
+            - 9001
       environment:
-        docker: true
+        php:
+          version: 8.1.20
+          pecl_extensions:
+            - grpc-1.56.0
+          ini:
+            xdebug.mode: coverage
       dependencies:
         override:
-          - docker-compose up -d --build
+          - composer self-update
+          - composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       tests:
         override:
-          - command: docker-compose run yii-runner-roadrunner vendor/bin/phpunit --coverage-clover ./coverage.xml
+          - command: ./vendor/bin/phpunit --coverage-clover ./coverage.xml
             on_node: 1
             coverage:
               file: coverage.xml
