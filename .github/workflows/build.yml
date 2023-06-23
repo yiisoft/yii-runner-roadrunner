@@ -56,3 +56,9 @@ jobs:
 
       - name: Run tests with code coverage
         run: vendor/bin/phpunit --coverage-clover=coverage.xml --colors=always --configuration phpunit.xml.dist
+
+      - name: Upload coverage to Codecov.
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml

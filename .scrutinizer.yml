@@ -8,6 +8,13 @@ filter:
 build:
   image: default-bionic
 
+  environment:
+    php:
+      version: 8.1.20
+      ini:
+        xdebug.mode: coverage
+        idle_timeout: 600
+
   nodes:
     analysis:
       tests:
@@ -15,17 +22,10 @@ build:
           - php-scrutinizer-run
 
     phpunit:
-      environment:
-        php:
-          version: 8.1.20
-          pecl_extensions:
-            - grpc-1.56.0
-          ini:
-            xdebug.mode: coverage
-          idle_timeout: 600
-
       dependencies:
         override:
+          - pecl channel-update pecl.php.net
+          - pecl install grpc-1.56.0
           - composer self-update
           - composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
           - vendor/bin/rr get-binary
