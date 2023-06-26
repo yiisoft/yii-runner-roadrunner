@@ -135,7 +135,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         $this->runBootstrap();
         $this->checkEvents();
 
-        $worker = new RoadRunnerWorker($container, $this->psr7Worker);
+        $worker = new RoadRunnerHttpWorker($container, $this->psr7Worker);
 
         /** @var Application $application */
         $application = $container->get(Application::class);

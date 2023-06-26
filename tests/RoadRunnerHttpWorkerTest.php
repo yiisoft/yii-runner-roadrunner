@@ -8,19 +8,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
-use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerWorker;
+use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpWorker;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\Psr7WorkerMock;
 
 use function json_encode;
 use function microtime;
 
-final class RoadRunnerWorkerTest extends TestCase
+final class RoadRunnerHttpWorkerTest extends TestCase
 {
     public function testRespond(): void
     {
         $this->expectOutputString($this->getResponseData());
 
-        $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock());
+        $worker = new RoadRunnerHttpWorker($this->createContainer(), new Psr7WorkerMock());
         $worker->respond($this->createResponse());
     }
 
@@ -36,7 +36,7 @@ final class RoadRunnerWorkerTest extends TestCase
             'request-attribute-exists' => false,
         ]);
 
-        $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock());
+        $worker = new RoadRunnerHttpWorker($this->createContainer(), new Psr7WorkerMock());
 
         $this->expectOutputString($this->getResponseData(Status::INTERNAL_SERVER_ERROR, $headers, $body));
 
@@ -58,7 +58,7 @@ final class RoadRunnerWorkerTest extends TestCase
             'request-attribute-exists' => false,
         ]);
 
-        $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock());
+        $worker = new RoadRunnerHttpWorker($this->createContainer(), new Psr7WorkerMock());
 
         $this->expectOutputString($this->getResponseData(Status::BAD_REQUEST, $headers, $body));
 
@@ -72,14 +72,14 @@ final class RoadRunnerWorkerTest extends TestCase
 
     public function testWaitRequestWithNullReturn(): void
     {
-        $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock());
+        $worker = new RoadRunnerHttpWorker($this->createContainer(), new Psr7WorkerMock());
 
         $this->assertNull($worker->waitRequest());
     }
 
     public function testWaitRequestWithRequestInstanceReturn(): void
     {
-        $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock($this->createServerRequest()));
+        $worker = new RoadRunnerHttpWorker($this->createContainer(), new Psr7WorkerMock($this->createServerRequest()));
         $request = $worker->waitRequest();
 
         $this->assertInstanceOf(ServerRequestInterface::class, $request);
@@ -89,7 +89,7 @@ final class RoadRunnerWorkerTest extends TestCase
     public function testWaitRequestWithThrowableInstanceReturn(): void
     {
         $throwable = new RuntimeException();
-        $worker = new RoadRunnerWorker($this->createContainer(), new Psr7WorkerMock($throwable));
+        $worker = new RoadRunnerHttpWorker($this->createContainer(), new Psr7WorkerMock($throwable));
         $request = $worker->waitRequest();
 
         $this->assertInstanceOf(RuntimeException::class, $request);

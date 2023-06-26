@@ -32,9 +32,10 @@
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
         "spiral/roadrunner": "^2023.1.0",
-        "spiral/roadrunner-http": "^v2.2.0",
-        "spiral/roadrunner-worker": "^2.3",
+        "spiral/roadrunner-http": "^v3.0.0",
+        "spiral/roadrunner-worker": "^3.0.0",
         "spiral/roadrunner-cli": "^2.5.0",
+        "spiral/roadrunner-grpc": "^3.0.0",
         "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0|^2.0|^3.0",
         "yiisoft/di": "^1.0",
@@ -43,7 +44,8 @@
         "yiisoft/log": "^2.0",
         "yiisoft/log-target-file": "^3.0",
         "yiisoft/yii-http": "^1.0",
-        "yiisoft/yii-runner": "^2.0"
+        "yiisoft/yii-runner": "^2.0",
+        "grpc/grpc": "^1.50.0"
     },
     "require-dev": {
         "httpsoft/http-message": "^1.0",
@@ -54,7 +56,12 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.30|^5.7",
         "yiisoft/middleware-dispatcher": "^5.0",
-        "yiisoft/test-support": "^3.0"
+        "yiisoft/test-support": "^3.0",
+        "mockery/mockery": "^1.6.2"
+    },
+    "suggest": {
+        "grpc/grpc": "Needed for gRPC support",
+        "ext-grpc": "Needed for gRPC support"
     },
     "autoload": {
         "psr-4": {
@@ -63,12 +70,20 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Yiisoft\\Yii\\Runner\\RoadRunner\\Tests\\": "tests"
+            "Yiisoft\\Yii\\Runner\\RoadRunner\\Tests\\": "tests",
+            "GPBMetadata\\": [
+                "tests/Support/Grpc/GPBMetadata"
+            ],
+            "Service\\": "tests/Support/Grpc/Service"
         }
     },
     "extra": {
         "config-plugin-options": {
+            "source-directory": "config",
             "build-merge-plan": false
+        },
+        "config-plugin": {
+            "params": "params.php"
         }
     },
     "config": {

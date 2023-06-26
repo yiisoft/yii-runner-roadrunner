@@ -33,16 +33,27 @@ use function json_encode;
 
 final class RoadRunnerHttpApplicationRunnerTest extends TestCase
 {
-    public function testCheckGarbageCollector(): void
+    public function testFirstRunGarbageCollector(): int
+    {
+        $gcRuns = gc_status()['runs'];
+        $this->assertSame($gcRuns === 0 ? 0 : 1, $gcRuns);
+
+        return $gcRuns;
+    }
+
+    /**
+     * @depends testFirstRunGarbageCollector
+     */
+    public function testCheckGarbageCollector(int $gcRuns): void
     {
         $worker = $this->createWorker();
         $runner = $this->createRunner(worker: $worker);
 
-        $this->assertSame(0, gc_status()['runs']);
         $this->expectOutputString($this->getResponseData(Status::OK, [], 'OK'));
         $runner->run();
         $this->assertSame(2, $worker->getRequestCount());
-        $this->assertSame(1, gc_status()['runs']);
+
+        $this->assertSame($gcRuns === 0 ? 1 : 3, gc_status()['runs']);
     }
 
     /**

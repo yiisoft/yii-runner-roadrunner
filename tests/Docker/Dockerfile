@@ -10,20 +10,20 @@ RUN apk add git libzip-dev autoconf g++ make linux-headers
 RUN docker-php-ext-install zip sockets
 
 # Install PHP extensions from PECL
-RUN pecl install xdebug pcov \
-    && docker-php-ext-enable xdebug pcov
+RUN pecl install xdebug pcov grpc protobuf \
+    && docker-php-ext-enable xdebug pcov grpc protobuf
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # Install RoadRunner
-COPY --from=spiralscout/roadrunner:2023.1.4 /usr/bin/rr /usr/local/bin/rr
+COPY --from=spiralscout/roadrunner:2023.1.5 /usr/bin/rr /usr/local/bin/rr
 
 # Set up work directory
 ADD . /app
 WORKDIR /app
 
-RUN composer install --prefer-dist --no-interaction
+RUN composer update --prefer-dist --no-interaction
 
-CMD ["sleep", "infinity"]
+ENTRYPOINT ["rr", "-d", "serve"]
