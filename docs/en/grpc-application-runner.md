@@ -35,7 +35,7 @@ $application->setServices([
 $application->run();
 ```
 
-### Configured RoadRunner
+### Configure RoadRunner
 
 Add the created handler file to the `command` section of the `.rr.yaml` config file
 
