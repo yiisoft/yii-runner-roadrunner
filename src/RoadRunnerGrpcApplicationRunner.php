@@ -17,7 +17,6 @@ use Yiisoft\Yii\Runner\ApplicationRunner;
 final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 {
     private ?InvokerInterface $invoker = null;
-    public bool $workerInterceptSideEffects = true;
     private array $services = [];
     private ?Worker $worker = null;
 
@@ -129,7 +128,7 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 
     public function getWorker(): Worker
     {
-        return $this->worker ?? Worker::create($this->workerInterceptSideEffects);
+        return $this->worker ?? Worker::create();
     }
 
     public function getInvoker(): InvokerInterface
