@@ -35,7 +35,7 @@ $application->setServices([
 $application->run();
 ```
 
-### Настройка конфигурации RoadRunner
+### Настройте RoadRunner
 
 Добавьте созданный файл обработчика в секцию `command` конфигурационного файла `.rr.yaml`
 
