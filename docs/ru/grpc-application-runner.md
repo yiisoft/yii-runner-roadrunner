@@ -6,7 +6,7 @@ Yii RoadRunner Runner поддерживает запуск сервисов, и
 
 ## Основное использование
 
-Для примера возьмем сервис `Pinger` описанный в [документации](https://roadrunner.dev/docs/plugins-grpc)
+Для примера возьмем сервис `Pinger`, описанный в [документации](https://roadrunner.dev/docs/plugins-grpc)
 
 ### Генерация DTO и сервисного интерфейса
 
