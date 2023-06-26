@@ -1,6 +1,6 @@
 # Запуск gRPC приложения для RoadRunner
 
-Yii RoadRunner Runner поддерживает запуск сервисов использующие протокол [gRPC](https://grpc.io) через `RoadRunnerGrpcApplicationRunner`.
+Yii RoadRunner Runner поддерживает запуск сервисов, использующих протокол [gRPC](https://grpc.io), через `RoadRunnerGrpcApplicationRunner`.
 
 > Обратите внимание! Для поддержки PHP 8.2 используйте расширение `grpc` >= 1.56.0
 
