@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionObject;
 use RuntimeException;
+use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Yiisoft\Config\Config;
 use Yiisoft\Config\ConfigPaths;
@@ -46,6 +47,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testCheckGarbageCollector(int $gcRuns): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $worker = $this->createWorker();
         $runner = $this->createRunner(worker: $worker);
 

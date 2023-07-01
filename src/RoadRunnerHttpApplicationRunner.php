@@ -216,7 +216,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 
     private function runRoadRunner(ContainerInterface $container): void
     {
-        $worker = new RoadRunnerWorker($container, $this->psr7Worker);
+        $worker = new RoadRunnerHttpWorker($container, $this->psr7Worker);
 
         /** @var Application $application */
         $application = $container->get(Application::class);
