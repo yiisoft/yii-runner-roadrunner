@@ -53,7 +53,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $runner->run();
         $this->assertSame(2, $worker->getRequestCount());
 
-        $this->assertSame($gcRuns === 0 ? 1 : 3, gc_status()['runs']);
+        $this->assertSame($gcRuns === 0 ? 1 : 2, gc_status()['runs']);
     }
 
     /**
