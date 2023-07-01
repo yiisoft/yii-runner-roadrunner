@@ -56,8 +56,7 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.30|^5.7",
         "yiisoft/middleware-dispatcher": "^5.0",
-        "yiisoft/test-support": "^3.0",
-        "mockery/mockery": "^1.6.2"
+        "yiisoft/test-support": "^3.0"
     },
     "suggest": {
         "grpc/grpc": "Needed for gRPC support",
