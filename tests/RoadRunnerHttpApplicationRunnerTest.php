@@ -48,6 +48,9 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         return $gcRuns;
     }
 
+    /**
+     * @depends testCheckGarbageCollector
+     */
     public function testUnsupportedMode(): void
     {
         $_ENV['RR_MODE'] = 'invalid';
@@ -58,6 +61,9 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $runner->run();
     }
 
+    /**
+     * @depends testCheckGarbageCollector
+     */
     public function testTemporalInactiveException(): void
     {
         $_ENV['RR_MODE'] = Mode::MODE_TEMPORAL;
@@ -66,6 +72,24 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Temporal support is disabled. You should call `withEnabledTemporal(true)` to enable temporal support.');
         $runner->run();
+    }
+
+    /**
+     * @depends testCheckGarbageCollector
+     */
+    public function testTemporal(): void
+    {
+        $_ENV['RR_MODE'] = Mode::MODE_TEMPORAL;
+
+        $container = $this->createContainer();
+
+        $runner = $this->createRunner()
+            ->withEnabledTemporal(true)
+            ->withContainer($container);
+
+        $runner->run();
+
+        $this->expectNotToPerformAssertions();
     }
 
     /**

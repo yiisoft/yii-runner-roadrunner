@@ -22,6 +22,12 @@ use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Temporal\DataConverter\DataConverter;
+use Temporal\DataConverter\DataConverterInterface;
+use Temporal\Worker\Transport\Goridge;
+use Temporal\Worker\Transport\HostConnectionInterface;
+use Temporal\Worker\Transport\RPCConnectionInterface;
+use Temporal\WorkerFactory;
 use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
@@ -37,6 +43,7 @@ use Yiisoft\Test\Support\Log\SimpleLogger;
 use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Http\Handler\NotFoundHandler;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\PlainTextRendererMock;
+use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\TemporalHostConnection;
 
 use function json_encode;
 
@@ -53,6 +60,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             UriFactoryInterface::class => UriFactory::class,
             UploadedFileFactoryInterface::class => UploadedFileFactory::class,
             ThrowableRendererInterface::class => PlainTextRendererMock::class,
+
+            /**
+             * Temporal related definitions.
+             */
+            DataConverterInterface::class => fn () => DataConverter::createDefault(),
+            RPCConnectionInterface::class => fn () => Goridge::create(),
+            WorkerFactory::class => fn () => WorkerFactory::create(),
+            HostConnectionInterface::class => fn () => new TemporalHostConnection(),
 
             ErrorCatcher::class => [
                 'forceContentType()' => ['text/plain'],

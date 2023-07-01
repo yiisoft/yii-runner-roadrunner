@@ -15,6 +15,7 @@ use RuntimeException;
 use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
+use Temporal\Worker\Transport\HostConnectionInterface;
 use Temporal\Worker\WorkerOptions;
 use Temporal\WorkerFactory;
 use Throwable;
@@ -282,7 +283,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
             $worker->registerActivity($activity::class);
         }
 
-        $factory->run();
+        $factory->run($container->get(HostConnectionInterface::class));
     }
 
     private function isTemporalSDKInstalled(): bool

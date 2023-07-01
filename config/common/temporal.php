@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Temporal\DataConverter\DataConverter;
 use Temporal\DataConverter\DataConverterInterface;
 use Temporal\Worker\Transport\Goridge;
+use Temporal\Worker\Transport\HostConnectionInterface;
+use Temporal\Worker\Transport\RoadRunner;
 use Temporal\Worker\Transport\RPCConnectionInterface;
 use Temporal\Worker\WorkerOptions;
 use Temporal\WorkerFactory;
@@ -43,4 +45,5 @@ return [
     DataConverterInterface::class => fn () => DataConverter::createDefault(),
     RPCConnectionInterface::class => fn () => Goridge::create(),
     WorkerFactory::class => fn () => WorkerFactory::create(),
+    HostConnectionInterface::class => fn () => RoadRunner::create(),
 ];
