@@ -42,6 +42,17 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         return $gcRuns;
     }
 
+    public function testUnsupportedMode(): void
+    {
+        $_ENV['RR_MODE'] = 'invalid';
+        $worker = $this->createWorker();
+        $runner = $this->createRunner(worker: $worker);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unsupported mode "invalid", modes are supported: "http", "temporal".');
+        $runner->run();
+    }
+
     /**
      * @depends testFirstRunGarbageCollector
      */
