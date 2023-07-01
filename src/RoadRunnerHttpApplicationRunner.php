@@ -29,7 +29,6 @@ use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Runner\ApplicationRunner;
-use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
 use function gc_collect_cycles;
 
@@ -172,9 +171,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
             return;
         }
 
-        // Leave support to run the application with built-in php server with: php -S 127.0.0.0:8080 public/index.php
-        $runner = new HttpApplicationRunner($this->rootPath, $this->debug, $this->environment);
-        $runner->run();
+        throw new RuntimeException('Unsupported mode.');
     }
 
     private function createTemporaryErrorHandler(): ErrorHandler
