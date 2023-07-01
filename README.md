@@ -19,14 +19,14 @@ The package contains a bootstrap for running Yii3 applications using [RoadRunner
 
 ## Requirements
 
-- PHP 8.0 or higher.
+- PHP 8.1 or higher.
 
 ## Installation
 
 The package could be installed with composer:
 
 ```shell
-composer require yiisoft/yii-runner-roadrunner --prefer-dist
+composer require yiisoft/yii-runner-roadrunner
 ```
 
 ## General usage
@@ -44,20 +44,26 @@ Create `worker.php` in your application root directory:
 
 declare(strict_types=1);
 
-use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner;
+use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner;
 
 ini_set('display_errors', 'stderr');
 
 require_once __DIR__ . '/autoload.php';
 
-(new RoadRunnerApplicationRunner(__DIR__, $_ENV['YII_DEBUG'], $_ENV['YII_ENV']))->run();
+(new RoadRunnerHttpApplicationRunner(
+    rootPath: __DIR__, 
+    debug: $_ENV['YII_DEBUG'], 
+    checkEvents: $_ENV['YII_DEBUG'], 
+    environment: $_ENV['YII_ENV']
+))->run();
 ```
 
 Specify it in your `.rr.yaml`:
 
 ```yaml
+version: '3'
 server:
-    command: "php /worker.php"
+    command: "php ./worker.php"
 
 rpc:
     listen: tcp://127.0.0.1:6001
@@ -65,75 +71,78 @@ rpc:
 http:
     address: :8082
     pool:
-        num_workers: 4
-        max_jobs: 64
+        num_workers: 8
+        # Debug mode for the pool. In this mode, pool will not pre-allocate the worker.
+        # Worker (only 1, num_workers ignored) will be allocated right after the request arrived.
+        debug: false
     middleware: ["static", "headers"]
     static:
-        dir:   "/public"
+        dir:   "./public"
         forbid: [".php", ".htaccess"]
     headers:
         response:
             "Cache-Control": "no-cache"
-
-reload:
-    interval: 1s
-    patterns: [ ".php" ]
-    services:
-        http:
-            recursive: true
-            dirs: [ "/" ]
 
 logs:
     mode: production
     level: warn
 ```
 
+> **Note**:
+> Official [configuration reference](https://roadrunner.dev/docs/intro-config/). You can also activate `RoadRunner`
+> schema in your IDE to get autocompletion hints.
+
 Run RoadRunner with the config specified:
 
 ```
-./vendor/bin/rr serve -c ./.rr.yaml
+./rr serve
 ```
 
 ### Additional configuration
 
-By default, the `RoadRunnerApplicationRunner` is configured to work with Yii application templates.
-You can override the default configuration using immutable setters.
+By default, the `RoadRunnerHttpApplicationRunner` is configured to work with Yii application templates and follows the
+[config groups convention](https://github.com/yiisoft/docs/blob/master/022-config-groups.md).
 
-Override the name of the bootstrap configuration group as follows:
+You can override the default configuration using constructor parameters and immutable setters.
 
-```php
-/**
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
- */
+#### Constructor parameters
 
-// Bootstrap configuration group name by default is "bootstrap-web".
-$runner = $runner->withBootstrap('my-bootstrap-config-group-name');
+`$rootPath` — the absolute path to the project root.
 
-// Disables the use of bootstrap configuration group.
-$runner = $runner->withoutBootstrap();
-```
+`$debug` — whether the debug mode is enabled.
 
-In debug mode, event configurations are checked, to override, use the following setters:
+`$checkEvents` — whether check events' configuration.
 
-```php
-/**
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
- */
+`$environment` — the environment name.
 
-// Configuration group name of events by default is "events-web".
-$runner = $runner->withCheckingEvents('my-events-config-group-name');
+`$bootstrapGroup` — the bootstrap configuration group name.
 
-// Disables checking of the event configuration group.
-$runner = $runner->withoutCheckingEvents();
-```
+`$eventsGroup` — the events' configuration group name.
 
-If the configuration instance settings differ from the default, such as configuration group names,
-you can specify a customized configuration instance:
+`$diGroup` — the container definitions' configuration group name.
+
+`$diProvidersGroup` — the container providers' configuration group name.
+
+`$diDelegatesGroup` — the container delegates' configuration group name.
+
+`$diTagsGroup` — the container tags' configuration group name.
+
+`$paramsGroup` — the config parameters group name.
+
+`$nestedParamsGroups` — configuration group names that are included into config parameters group. This is needed for
+recursive merge parameters.
+
+`$nestedEventsGroups` — configuration group names that are included into events' configuration group. This is needed for
+reverse and recursive merge events' configurations.
+
+#### Immutable setters
+
+If the configuration instance settings differ from the default you can specify a customized configuration instance:
 
 ```php
 /**
  * @var Yiisoft\Config\ConfigInterface $config
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withConfig($config);
@@ -145,7 +154,7 @@ of the `Psr\Container\ContainerInterface`:
 ```php
 /**
  * @var Psr\Container\ContainerInterface $container
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withContainer($container);
@@ -161,7 +170,7 @@ By default, the temporary error handler uses HTML renderer and logging to a file
 /**
  * @var Psr\Log\LoggerInterface $logger
  * @var Yiisoft\ErrorHandler\Renderer\PlainTextRenderer $renderer
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withTemporaryErrorHandler(
@@ -175,7 +184,7 @@ You can also use your own implementation of the `Spiral\RoadRunner\Http\PSR7Work
 ```php
 /**
  * @var Spiral\RoadRunner\Http\PSR7WorkerInterface $psr7Worker
- * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerApplicationRunner $runner
+ * @var Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner $runner
  */
 
 $runner = $runner->withPsr7Worker($psr7Worker);

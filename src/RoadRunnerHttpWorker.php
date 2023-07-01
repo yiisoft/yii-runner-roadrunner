@@ -25,7 +25,7 @@ use function microtime;
 /**
  * @internal
  */
-final class RoadRunnerWorker
+final class RoadRunnerHttpWorker
 {
     private ResponseFactoryInterface $responseFactory;
     private PSR7WorkerInterface $worker;

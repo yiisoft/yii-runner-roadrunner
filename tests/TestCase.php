@@ -32,8 +32,6 @@ use Yiisoft\ErrorHandler\ThrowableRendererInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
-use Yiisoft\Middleware\Dispatcher\WrapperFactory;
-use Yiisoft\Middleware\Dispatcher\WrapperFactoryInterface;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 use Yiisoft\Yii\Http\Application;
@@ -49,7 +47,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return new Container(ContainerConfig::create()->withDefinitions([
             EventDispatcherInterface::class => SimpleEventDispatcher::class,
             LoggerInterface::class => SimpleLogger::class,
-            WrapperFactoryInterface::class => WrapperFactory::class,
             ResponseFactoryInterface::class => ResponseFactory::class,
             ServerRequestFactoryInterface::class => ServerRequestFactory::class,
             StreamFactoryInterface::class => StreamFactory::class,

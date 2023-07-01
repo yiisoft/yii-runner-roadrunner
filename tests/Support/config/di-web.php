@@ -27,8 +27,6 @@ use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
 use Yiisoft\ErrorHandler\ThrowableRendererInterface;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
-use Yiisoft\Middleware\Dispatcher\WrapperFactory;
-use Yiisoft\Middleware\Dispatcher\WrapperFactoryInterface;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 use Yiisoft\Yii\Http\Application;
@@ -38,7 +36,6 @@ use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\PlainTextRendererMock;
 return [
     EventDispatcherInterface::class => SimpleEventDispatcher::class,
     LoggerInterface::class => SimpleLogger::class,
-    WrapperFactoryInterface::class => WrapperFactory::class,
     ResponseFactoryInterface::class => ResponseFactory::class,
     ServerRequestFactoryInterface::class => ServerRequestFactory::class,
     StreamFactoryInterface::class => StreamFactory::class,
