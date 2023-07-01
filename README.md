@@ -29,6 +29,11 @@ The package could be installed with composer:
 composer require yiisoft/yii-runner-roadrunner
 ```
 
+## Documentation
+
+- [English](docs/en/README.md)
+- [Russian](docs/ru/README.md)
+
 ## General usage
 
 Get RoadRunner:
