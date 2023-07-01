@@ -34,6 +34,12 @@ use function json_encode;
 
 final class RoadRunnerHttpApplicationRunnerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $_ENV['RR_MODE'] = '';
+        parent::tearDown();
+    }
+
     public function testFirstRunGarbageCollector(): int
     {
         $gcRuns = gc_status()['runs'];
@@ -45,11 +51,20 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
     public function testUnsupportedMode(): void
     {
         $_ENV['RR_MODE'] = 'invalid';
-        $worker = $this->createWorker();
-        $runner = $this->createRunner(worker: $worker);
+        $runner = $this->createRunner();
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unsupported mode "invalid", modes are supported: "http", "temporal".');
+        $runner->run();
+    }
+
+    public function testTemporalInactiveException(): void
+    {
+        $_ENV['RR_MODE'] = Mode::MODE_TEMPORAL;
+        $runner = $this->createRunner();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Temporal support is disabled. You should call `withEnabledTemporal(true)` to enable temporal support.');
         $runner->run();
     }
 
@@ -74,6 +89,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithDefaults(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $worker = $this->createWorker();
         $runner = $this->createRunner(worker: $worker);
 
@@ -87,6 +103,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithBootstrap(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $runner = $this->createRunner(bootstrapGroup: 'bootstrap-web');
 
         $this->expectOutputString("Bootstrapping{$this->getResponseData(Status::OK, [], 'OK')}");
@@ -98,6 +115,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithCheckingEvents(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $runner = $this->createRunner(checkEvents: true, eventsGroup: 'events-fail');
 
         $this->expectException(InvalidListenerConfigurationException::class);
@@ -110,6 +128,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithCustomizedConfiguration(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $config = $this->createConfig();
         $container = $this->createContainer();
         $runner = $this->createRunner()
@@ -145,6 +164,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithWaitRequestNullReturn(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $worker = new Psr7WorkerMock();
         $container = $this->createContainer();
         $runner = $this->createRunner(worker: $worker)
@@ -175,6 +195,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithWaitRequestThrowableInstanceReturn(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $worker = new Psr7WorkerMock(new RuntimeException('Some error'));
         $container = $this->createContainer();
         $runner = $this->createRunner(worker: $worker)
@@ -216,6 +237,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
      */
     public function testRunWithFailureDuringRunningProcess(): void
     {
+        $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $container = $this->createContainer(true);
         $runner = $this->createRunner()->withContainer($container);
 
@@ -244,6 +266,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $this->assertNotSame($runner, $runner->withConfig($this->createConfig()));
         $this->assertNotSame($runner, $runner->withContainer($this->createContainer()));
         $this->assertNotSame($runner, $runner->withTemporaryErrorHandler($this->createErrorHandler()));
+        $this->assertNotSame($runner, $runner->withEnabledTemporal(true));
         $this->assertNotSame($runner, $runner->withPsr7Worker(new Psr7WorkerMock()));
     }
 
