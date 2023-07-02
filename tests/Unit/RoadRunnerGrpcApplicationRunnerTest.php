@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Runner\RoadRunner\Tests\Unit;
 
-use Mockery;
 use PHPUnit\Framework\TestCase;
 use Service\EchoInterface;
 use Service\Message;
@@ -16,8 +15,6 @@ use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\Grpc\EchoService;
 
 final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testSetServices(): void
     {
         $services = [
@@ -43,7 +40,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
                 'context' => [],
             ]
         );
-        $relay->shouldReceive('send')->once()->withArgs(function (Frame $frame) {
+        $relay->expects($this->once())->method('send')->willReturnCallback(function (Frame $frame) {
             return $frame->payload === '{}' . $this->packMessage('PONG');
         });
 
@@ -66,20 +63,18 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
         );
     }
 
-    protected function createRelay(string $body, array $header): RelayInterface
+    protected function createRelay(string $body, array $header): RelayInterface|\PHPUnit\Framework\MockObject\MockObject
     {
         $body = $this->packMessage($body);
-        $header = json_encode($header, JSON_THROW_ON_ERROR);
+        $header1 = json_encode($header, JSON_THROW_ON_ERROR);
+        $header2 = json_encode(['stop' => true]);
 
-        $relay = Mockery::mock(RelayInterface::class);
-        $relay->shouldReceive('waitFrame')->once()->andReturn(
-            new Frame($header . $body, [mb_strlen($header)])
+        $relay = $this->createMock(RelayInterface::class);
+        $relay->expects($this->exactly(2))->method('waitFrame')->willReturnOnConsecutiveCalls(
+            new Frame($header1 . $body, [mb_strlen($header1)]),
+            new Frame($header2, [mb_strlen($header2)], Frame::CONTROL)
         );
 
-        $header = json_encode(['stop' => true]);
-        $relay->shouldReceive('waitFrame')->once()->andReturn(
-            new Frame($header, [mb_strlen($header)], Frame::CONTROL)
-        );
 
         return $relay;
     }
@@ -89,11 +84,5 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
         return (new Message())
             ->setMsg($message)
             ->serializeToString();
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        Mockery::close();
     }
 }
