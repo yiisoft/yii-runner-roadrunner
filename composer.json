@@ -44,8 +44,7 @@
         "yiisoft/log": "^2.0",
         "yiisoft/log-target-file": "^3.0",
         "yiisoft/yii-http": "^1.0",
-        "yiisoft/yii-runner": "^2.0",
-        "grpc/grpc": "^1.50.0"
+        "yiisoft/yii-runner": "^2.0"
     },
     "require-dev": {
         "httpsoft/http-message": "^1.0",
@@ -56,7 +55,8 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.30|^5.7",
         "yiisoft/middleware-dispatcher": "^5.0",
-        "yiisoft/test-support": "^3.0"
+        "yiisoft/test-support": "^3.0",
+        "grpc/grpc": "^1.50.0"
     },
     "suggest": {
         "grpc/grpc": "Needed for gRPC support",
