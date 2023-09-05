@@ -1,0 +1,6 @@
+{
+    "symbol-whitelist" : [
+        "Temporal\\WorkerFactory",
+        "Temporal\\Worker\\WorkerOptions"
+    ]
+}

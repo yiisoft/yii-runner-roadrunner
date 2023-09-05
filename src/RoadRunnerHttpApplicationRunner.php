@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Runner\RoadRunner;
 
 use ErrorException;
+use Exception;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
+use Spiral\RoadRunner\Environment;
+use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
+use Temporal\Worker\Transport\HostConnectionInterface;
+use Temporal\Worker\WorkerOptions;
+use Temporal\WorkerFactory;
 use Throwable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -33,6 +40,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 {
     private ?ErrorHandler $temporaryErrorHandler = null;
     private ?PSR7WorkerInterface $psr7Worker = null;
+    private bool $isTemporalEnabled = false;
 
     /**
      * @param string $rootPath The absolute path to the project root.
@@ -114,6 +122,19 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
     }
 
     /**
+     * Returns a new instance with enabled temporal support.
+     */
+    public function withEnabledTemporal(bool $value): self
+    {
+        if (!$this->isTemporalSDKInstalled()) {
+            throw new Exception('Temporal SDK is not installed. To install the SDK run `composer require temporal/sdk`.');
+        }
+        $new = clone $this;
+        $new->isTemporalEnabled = $value;
+        return $new;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws CircularReferenceException|ErrorException|InvalidConfigException|JsonException
@@ -135,37 +156,27 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         $this->runBootstrap();
         $this->checkEvents();
 
-        $worker = new RoadRunnerHttpWorker($container, $this->psr7Worker);
+        $env = Environment::fromGlobals();
 
-        /** @var Application $application */
-        $application = $container->get(Application::class);
-        $application->start();
-
-        while (true) {
-            $request = $worker->waitRequest();
-            $response = null;
-
-            if ($request === null) {
-                break;
+        if ($env->getMode() === Mode::MODE_TEMPORAL) {
+            if (!$this->isTemporalEnabled) {
+                throw new RuntimeException(
+                    'Temporal support is disabled. You should call `withEnabledTemporal(true)` to enable temporal support.',
+                );
             }
-
-            if ($request instanceof Throwable) {
-                $response = $worker->respondWithError($request);
-                $this->afterRespond($application, $container, $response);
-                continue;
-            }
-
-            try {
-                $response = $application->handle($request);
-                $worker->respond($response);
-            } catch (Throwable $t) {
-                $response = $worker->respondWithError($t, $request);
-            } finally {
-                $this->afterRespond($application, $container, $response);
-            }
+            $this->runTemporal($container);
+            return;
+        }
+        if ($env->getMode() === Mode::MODE_HTTP) {
+            $this->runRoadRunner($container);
+            return;
         }
 
-        $application->shutdown();
+        throw new RuntimeException(sprintf(
+            'Unsupported mode "%s", modes are supported: "%s".',
+            $env->getMode(),
+            implode('", "', [Mode::MODE_HTTP, Mode::MODE_TEMPORAL]),
+        ));
     }
 
     private function createTemporaryErrorHandler(): ErrorHandler
@@ -203,5 +214,80 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
             ->get(StateResetter::class)
             ->reset(); // We should reset the state of such services every request.
         gc_collect_cycles();
+    }
+
+    private function runRoadRunner(ContainerInterface $container): void
+    {
+        $worker = new RoadRunnerHttpWorker($container, $this->psr7Worker);
+
+        /** @var Application $application */
+        $application = $container->get(Application::class);
+        $application->start();
+
+        while (true) {
+            $request = $worker->waitRequest();
+            $response = null;
+
+            if ($request === null) {
+                break;
+            }
+
+            if ($request instanceof Throwable) {
+                $response = $worker->respondWithError($request);
+                $this->afterRespond($application, $container, $response);
+                continue;
+            }
+
+            try {
+                $response = $application->handle($request);
+                $worker->respond($response);
+            } catch (Throwable $t) {
+                $response = $worker->respondWithError($t, $request);
+            } finally {
+                $this->afterRespond($application, $container, $response);
+            }
+        }
+
+        $application->shutdown();
+    }
+
+    private function runTemporal(ContainerInterface $container): void
+    {
+        /**
+         * @var WorkerFactory $factory
+         */
+        $factory = $container->get(WorkerFactory::class);
+        /**
+         * @var WorkerOptions $workerOptions
+         */
+        $workerOptions = $container->get(WorkerOptions::class);
+
+        $worker = $factory->newWorker(
+            'default',
+            $workerOptions,
+        );
+        /**
+         * @var object[] $workflows
+         */
+        $workflows = $container->get('tag@temporal.workflow');
+        /**
+         * @var object[] $activities
+         */
+        $activities = $container->get('tag@temporal.activity');
+
+        foreach ($workflows as $workflow) {
+            $worker->registerWorkflowTypes($workflow::class);
+        }
+
+        foreach ($activities as $activity) {
+            $worker->registerActivity($activity::class);
+        }
+
+        $factory->run($container->get(HostConnectionInterface::class));
+    }
+
+    private function isTemporalSDKInstalled(): bool
+    {
+        return class_exists(WorkerFactory::class);
     }
 }
