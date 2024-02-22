@@ -56,3 +56,4 @@ grpc:
         command: "php GrpcWorker.php"
 ```
 
+> Notice! If you are also implementing the client side (to call RoadRunner API from the PHP application) then you will need to manually add the `grpc/grpc` package of the correct version to your composer.json.
