@@ -6,6 +6,7 @@
 - Chg #61: Increased minimum PHP version to 8.1 (@s1lver)
 - Enh #67: Added runner for gRPC requests (@s1lver)
 - Enh #74: Add support for `psr/http-message` of `^2.0` version (@vjik)
+- Chg #76: `grpc/grpc` dependency is made optional
 
 ## 2.0.0 February 19, 2023
 
