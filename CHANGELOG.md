@@ -1,6 +1,6 @@
 # Yii Runner RoadRunner Change Log
 
-## 3.0.0 under development
+## 3.0.0 February 22, 2024
 
 - Chg #23: Rename `RoadRunnerApplicationRunner` to `RoadRunnerHttpApplicationRunner` (@s1lver)
 - Chg #61: Increased minimum PHP version to 8.1 (@s1lver)
