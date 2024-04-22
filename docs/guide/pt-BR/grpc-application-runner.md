@@ -54,4 +54,4 @@ grpc:
         command: "php GrpcWorker.php"
 ```
 
-> Aviso! Se você também estiver implementando o lado do cliente (para chamar a API RoadRunner do aplicativo PHP), você precisará adicionar manualmente o pacote `grpc/grpc` da versão correta ao seu compositor.json.
+> Aviso! Se você também estiver implementando o lado do cliente (para chamar a API RoadRunner do aplicativo PHP), você precisará adicionar manualmente o pacote `grpc/grpc` da versão correta ao seu composer.json.
