@@ -1,6 +1,6 @@
 # Yii Runner RoadRunner Change Log
 
-## 3.0.1 under development
+## 3.0.1 April 23, 2024
 
 - Enh #82: Allow to use RoadRunner version 2024 and higher (@dependabot, @viktorprogger)
 
