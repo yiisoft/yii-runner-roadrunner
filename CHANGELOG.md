@@ -2,7 +2,7 @@
 
 ## 3.0.1 under development
 
-- Enh #82: Allow to use RoadRunner version 2024 and higher
+- Enh #82: Allow to use RoadRunner version 2024 and higher (@dependabot, @viktorprogger)
 
 ## 3.0.0 February 22, 2024
 
