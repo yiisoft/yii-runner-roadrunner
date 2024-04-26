@@ -6,7 +6,7 @@
 
 ## 3.0.1 April 23, 2024
 
-- Enh #82: Allow to use RoadRunner version 2024 and higher (@dependabot, @viktorprogger)
+- Enh #82: Allow to use RoadRunner version 2024 and higher (@viktorprogger)
 
 ## 3.0.0 February 22, 2024
 

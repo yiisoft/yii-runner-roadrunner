@@ -188,13 +188,11 @@ $runner = $runner->withPsr7Worker($psr7Worker);
 
 ## Documentation
 
-- [Guide](docs/guide/readme.md)
+- Guide: [English](docs/en/README.md), [Russian](docs/ru/README.md), [Português - Brasil](docs/pt-BR/readme.md)
 - [Internals](docs/internals.md)
 
-## Support
-
-If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.
-You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
+If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for 
+that. You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
 ## Support the project
 
