@@ -188,7 +188,7 @@ $runner = $runner->withPsr7Worker($psr7Worker);
 
 ## Documentation
 
-- Guide: [English](docs/guide/en/README.md), [Russian](docs/guide/ru/README.md), 
+- Guide: [English](docs/guide/en/readme.md), [Russian](docs/guide/ru/readme.md), 
   [Português - Brasil](docs/guide/pt-BR/readme.md)
 - [Internals](docs/internals.md)
 
