@@ -188,7 +188,8 @@ $runner = $runner->withPsr7Worker($psr7Worker);
 
 ## Documentation
 
-- Guide: [English](docs/en/README.md), [Russian](docs/ru/README.md), [Português - Brasil](docs/pt-BR/readme.md)
+- Guide: [English](docs/guide/en/README.md), [Russian](docs/guide/ru/README.md), 
+  [Português - Brasil](docs/guide/pt-BR/readme.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for 
