@@ -1,4 +1,4 @@
-# Upgrading Instructions for Yii RoadRunner Runner
+# Yii RoadRunner Runner Upgrading Instructions
 
 ## Upgrade from 2.0.0
 
