@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
     <h1 align="center">Yii RoadRunner Runner</h1>
     <br>
@@ -188,11 +188,10 @@ $runner = $runner->withPsr7Worker($psr7Worker);
 
 ## Documentation
 
-- Guide: [English](docs/guide/en/README.md), [Russian](docs/guide/ru/README.md), 
-  [Português - Brasil](docs/guide/pt-BR/README.md)
+- Guide: [English](docs/guide/en/README.md), [Russian](docs/guide/ru/README.md), [Português - Brasil](docs/guide/pt-BR/README.md)
 - [Internals](docs/internals.md)
 
-If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for 
+If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for
 that. You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
 ## License
