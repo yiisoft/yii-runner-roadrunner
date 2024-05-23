@@ -1,4 +1,4 @@
-# Yii Runner RoadRunner Change Log
+# Yii RoadRunner Runner Change Log
 
 ## 3.0.2 under development
 
