@@ -7,7 +7,7 @@ application when you upgrade the package from one version to another.
 > to upgrade from version A to version C and there is version B between A and C, you need
 > to following the instructions for both A and B.
 
-## Upgrade from 2.0.0
+## Upgrade from 2.x
 
 - `RoadRunnerApplicationRunner` has been renamed to `RoadRunnerHttpApplicationRunner`
 - Increased minimum PHP version to 8.1 and RoadRunner to 2023.1.*
