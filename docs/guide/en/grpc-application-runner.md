@@ -10,15 +10,13 @@ For example, let's take the `Pinger` service described in the [documentation](ht
 
 ### DTO and service interface generation
 
-A detailed description of how to do this can be read https://roadrunner.dev/docs/plugins-grpc
+A detailed description of how to do this can be read <https://roadrunner.dev/docs/plugins-grpc>
 
 ### Create worker for gRPC
 
-Create a handler file in your application directory, for example - `GrpcWorker.php`:
+Create a handler file in your application directory, for example `GrpcWorker.php`:
 
 ```php
-declare(strict_types=1);
-
 use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerGrpcApplicationRunner;
 
 ini_set('display_errors', 'stderr');
@@ -56,3 +54,4 @@ grpc:
         command: "php GrpcWorker.php"
 ```
 
+> Notice! If you are also implementing the client side (to call RoadRunner API from the PHP application) then you will need to manually add the `grpc/grpc` package of the correct version to your composer.json.

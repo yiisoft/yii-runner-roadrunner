@@ -10,11 +10,11 @@
     "license": "BSD-3-Clause",
     "support": {
         "issues": "https://github.com/yiisoft/yii-runner-roadrunner/issues?state=open",
+        "source": "https://github.com/yiisoft/yii-runner-roadrunner",
         "forum": "https://www.yiiframework.com/forum/",
         "wiki": "https://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
-        "chat": "https://t.me/yii3en",
-        "source": "https://github.com/yiisoft/yii-runner-roadrunner"
+        "irc": "ircs://irc.libera.chat:6697/yii",
+        "chat": "https://t.me/yii3en"
     },
     "funding": [
         {
@@ -30,8 +30,8 @@
         "php": "^8.1",
         "psr/container": "^2.0",
         "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.0",
-        "spiral/roadrunner": "^2023.1.0",
+        "psr/http-message": "^1.0|^2.0",
+        "spiral/roadrunner": "^2023.1.0|^2024.1.0",
         "spiral/roadrunner-http": "^v3.0.0",
         "spiral/roadrunner-worker": "^3.0.0",
         "spiral/roadrunner-cli": "^2.5.0",
@@ -44,21 +44,20 @@
         "yiisoft/log": "^2.0",
         "yiisoft/log-target-file": "^3.0",
         "yiisoft/yii-http": "^1.0",
-        "yiisoft/yii-runner": "^2.0",
-        "grpc/grpc": "^1.50.0"
+        "yiisoft/yii-runner": "^2.0"
     },
     "require-dev": {
         "httpsoft/http-message": "^1.0",
         "maglnet/composer-require-checker": "^4.2",
-        "phpunit/phpunit": "^9.5",
-        "rector/rector": "^0.17.0",
+        "phpunit/phpunit": "^10.3",
+        "rector/rector": "^1.0.0",
         "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
         "temporal/sdk": "^2.3",
-        "vimeo/psalm": "^4.30|^5.7",
+        "vimeo/psalm": "^5.22",
         "yiisoft/middleware-dispatcher": "^5.0",
         "yiisoft/test-support": "^3.0",
-        "mockery/mockery": "^1.6.2"
+        "grpc/grpc": "^1.50.0"
     },
     "suggest": {
         "grpc/grpc": "Needed for gRPC support",

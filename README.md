@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
     <h1 align="center">Yii RoadRunner Runner</h1>
     <br>
@@ -23,7 +23,7 @@ The package contains a bootstrap for running Yii3 applications using [RoadRunner
 
 ## Installation
 
-The package could be installed with composer:
+The package could be installed with [Composer](https://getcomposer.org):
 
 ```shell
 composer require yiisoft/yii-runner-roadrunner
@@ -33,17 +33,13 @@ composer require yiisoft/yii-runner-roadrunner
 
 Get RoadRunner:
 
-```
+```shell
 ./vendor/bin/rr get
 ```
 
 Create `worker.php` in your application root directory:
 
 ```php
-<?php
-
-declare(strict_types=1);
-
 use Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner;
 
 ini_set('display_errors', 'stderr');
@@ -94,7 +90,7 @@ logs:
 
 Run RoadRunner with the config specified:
 
-```
+```shell
 ./rr serve
 ```
 
@@ -267,27 +263,13 @@ The last two things are to call `withEnabledTemporal(true)` on the `RoadRunnerAp
 ### Unit testing
 
 The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
+## Documentation
 
-```shell
-./vendor/bin/phpunit
-```
+- Guide: [English](docs/guide/en/README.md), [Português - Brasil](docs/guide/pt-BR/README.md), [Русский](docs/guide/ru/README.md)
+- [Internals](docs/internals.md)
 
-### Mutation testing
-
-The package tests are checked with [Infection](https://infection.github.io/) mutation framework with
-[Infection Static Analysis Plugin](https://github.com/Roave/infection-static-analysis-plugin). To run it:
-
-```shell
-./vendor/bin/roave-infection-static-analysis-plugin
-```
-
-### Static analysis
-
-The code is statically analyzed with [Psalm](https://psalm.dev/). To run static analysis:
-
-```shell
-./vendor/bin/psalm
-```
+If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for
+that. You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
 ## License
 

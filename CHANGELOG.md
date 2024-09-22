@@ -1,12 +1,21 @@
-# Yii Runner RoadRunner Change Log
+# Yii RoadRunner Runner Change Log
 
-## 2.0.1 under development
+## 3.0.2 under development
+
+- no changes in this release.
+
+## 3.0.1 April 23, 2024
+
+- Enh #82: Allow to use RoadRunner version 2024 and higher (@viktorprogger)
+
+## 3.0.0 February 22, 2024
 
 - Enh #39: Add temporal support (@xepozz)
 - Enh #35: Add composer require checker into CI (@xepozz)
 - Chg #23: Rename `RoadRunnerApplicationRunner` to `RoadRunnerHttpApplicationRunner` (@s1lver)
 - Chg #61: Increased minimum PHP version to 8.1 (@s1lver)
-- Enh #67: Added runner for gRPC requests (@s1lver)
+- Enh #67, #76: Added runner for gRPC requests (@s1lver)
+- Enh #74: Add support for `psr/http-message` of `^2.0` version (@vjik)
 
 ## 2.0.0 February 19, 2023
 
