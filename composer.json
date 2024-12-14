@@ -86,7 +86,7 @@
             "build-merge-plan": false
         },
         "config-plugin": {
-            "common": "common/*.php",
+            "di": "di-*.php",
             "params": "params.php"
         }
     },
