@@ -7,5 +7,11 @@ return [
         'grpc' => [
             'services' => [],
         ],
+        'temporal' => [
+            'enabled' => false,
+            'host' => 'localhost:7233',
+            'workflows' => [],
+            'activities' => [],
+        ],
     ],
 ];
