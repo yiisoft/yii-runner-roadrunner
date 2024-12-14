@@ -15,7 +15,6 @@ use RuntimeException;
 use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
-use Temporal\Worker\Transport\HostConnectionInterface;
 use Temporal\Worker\WorkerFactoryInterface;
 use Temporal\WorkerFactory;
 use Throwable;
@@ -254,8 +253,10 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 
     private function runTemporal(ContainerInterface $container): void
     {
+        /** @var TemporalDeclarationProvider $temporalDeclarationProvider */
         $temporalDeclarationProvider = $container->get(TemporalDeclarationProvider::class);
 
+        /** @var WorkerFactoryInterface $factory */
         $factory = $container->get(WorkerFactoryInterface::class);
         $worker = $factory->newWorker('default');
 
@@ -264,8 +265,9 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 
         $worker->registerWorkflowTypes(...$workflows);
 
-        $activityFactory = static fn (\ReflectionClass $class) => $container->get($class->getName());
-        $activityFinalizer = static function () use ($container) {
+        /** @psalm-suppress MixedReturnStatement,MixedInferredReturnType */
+        $activityFactory = static fn (\ReflectionClass $class): object => $container->get($class->getName());
+        $activityFinalizer = static function () use ($container): void {
             /** @psalm-suppress MixedMethodCall */
             $container
                 ->get(StateResetter::class)
@@ -278,9 +280,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         }
         $worker->registerActivityFinalizer($activityFinalizer);
 
-        $host = $container->get(HostConnectionInterface::class);
-
-        $factory->run($host);
+        $factory->run();
     }
 
     private function isTemporalSDKInstalled(): bool
