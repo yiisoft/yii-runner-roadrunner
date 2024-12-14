@@ -16,7 +16,6 @@ use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Temporal\Worker\WorkerFactoryInterface;
-use Temporal\WorkerFactory;
 use Throwable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -285,6 +284,6 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 
     private function isTemporalSDKInstalled(): bool
     {
-        return class_exists(WorkerFactory::class);
+        return class_exists(WorkerFactoryInterface::class);
     }
 }
