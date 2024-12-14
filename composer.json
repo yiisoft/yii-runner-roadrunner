@@ -53,7 +53,7 @@
         "rector/rector": "^2.0.3",
         "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
-        "temporal/sdk": "^2.3",
+        "temporal/sdk": "^2.11",
         "vimeo/psalm": "^5.22",
         "yiisoft/middleware-dispatcher": "^5.0",
         "yiisoft/test-support": "^3.0",

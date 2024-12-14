@@ -16,7 +16,7 @@ use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Temporal\Worker\Transport\HostConnectionInterface;
-use Temporal\Worker\WorkerOptions;
+use Temporal\Worker\WorkerFactoryInterface;
 use Temporal\WorkerFactory;
 use Throwable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -30,6 +30,7 @@ use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Runner\ApplicationRunner;
+use Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider;
 
 use function gc_collect_cycles;
 
@@ -253,37 +254,33 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 
     private function runTemporal(ContainerInterface $container): void
     {
-        /**
-         * @var WorkerFactory $factory
-         */
-        $factory = $container->get(WorkerFactory::class);
-        /**
-         * @var WorkerOptions $workerOptions
-         */
-        $workerOptions = $container->get(WorkerOptions::class);
+        $temporalDeclarationProvider = $container->get(TemporalDeclarationProvider::class);
 
-        $worker = $factory->newWorker(
-            'default',
-            $workerOptions,
-        );
-        /**
-         * @var object[] $workflows
-         */
-        $workflows = $container->get('tag@temporal.workflow');
-        /**
-         * @var object[] $activities
-         */
-        $activities = $container->get('tag@temporal.activity');
+        $factory = $container->get(WorkerFactoryInterface::class);
+        $worker = $factory->newWorker('default');
 
-        foreach ($workflows as $workflow) {
-            $worker->registerWorkflowTypes($workflow::class);
-        }
+        $workflows = $temporalDeclarationProvider->getWorkflows();
+        $activities = $temporalDeclarationProvider->getActivities();
+
+        $worker->registerWorkflowTypes(...$workflows);
+
+        $activityFactory = static fn (\ReflectionClass $class) => $container->get($class->getName());
+        $activityFinalizer = static function () use ($container) {
+            /** @psalm-suppress MixedMethodCall */
+            $container
+                ->get(StateResetter::class)
+                ->reset(); // We should reset the state of such services every request.
+            gc_collect_cycles();
+        };
 
         foreach ($activities as $activity) {
-            $worker->registerActivity($activity::class);
+            $worker->registerActivity($activity, $activityFactory);
         }
+        $worker->registerActivityFinalizer($activityFinalizer);
 
-        $factory->run($container->get(HostConnectionInterface::class));
+        $host = $container->get(HostConnectionInterface::class);
+
+        $factory->run($host);
     }
 
     private function isTemporalSDKInstalled(): bool

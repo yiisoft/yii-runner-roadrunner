@@ -8,42 +8,28 @@ use Temporal\Worker\Transport\Goridge;
 use Temporal\Worker\Transport\HostConnectionInterface;
 use Temporal\Worker\Transport\RoadRunner;
 use Temporal\Worker\Transport\RPCConnectionInterface;
-use Temporal\Worker\WorkerOptions;
+use Temporal\Worker\WorkerFactoryInterface;
 use Temporal\WorkerFactory;
+use Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider;
 
 /**
  * @var $params array
  */
 
-if (!($params['yiisoft/yii-runner-roadrunner']['temporal']['enabled'] ?? false)) {
+$temporalParams = $params['yiisoft/yii-runner-roadrunner']['temporal'];
+if (!($temporalParams['enabled'] ?? false)) {
     return [];
 }
 
-$options = $params['yiisoft/yii-runner-roadrunner']['temporal']['options'] ?? [];
-
-
 return [
-    'tag@temporal.workflow' => [],
-    'tag@temporal.activity' => [],
-
-    WorkerOptions::class => [
-        //        'withMaxConcurrentActivityExecutionSize()' => [$options['maxConcurrentActivityExecutionSize']],
-        //        'withWorkerActivitiesPerSecond()' => [$options['workerActivitiesPerSecond']],
-        //        'withMaxConcurrentLocalActivityExecutionSize()' => [$options['maxConcurrentLocalActivityExecutionSize']],
-        //        'withWorkerLocalActivitiesPerSecond()' => [$options['workerLocalActivitiesPerSecond']],
-        //        'withTaskQueueActivitiesPerSecond()' => [$options['taskQueueActivitiesPerSecond']],
-        'withMaxConcurrentActivityTaskPollers()' => [$options['maxConcurrentActivityTaskPollers']],
-        //        'withMaxConcurrentWorkflowTaskExecutionSize()' => [$options['maxConcurrentWorkflowTaskExecutionSize']],
-        'withMaxConcurrentWorkflowTaskPollers()' => [$options['maxConcurrentWorkflowTaskPollers']],
-        //        'withStickyScheduleToStartTimeout()' => [$options['stickyScheduleToStartTimeout']],
-        //        'withWorkerStopTimeout()' => [$options['workerStopTimeout']],
-        //        'withEnableSessionWorker()' => [$options['enableSessionWorker']],
-        //        'withSessionResourceId()' => [$options['sessionResourceId']],
-        'withMaxConcurrentSessionExecutionSize()' => [$options['maxConcurrentSessionExecutionSize']],
-    ],
-
     DataConverterInterface::class => fn () => DataConverter::createDefault(),
     RPCConnectionInterface::class => fn () => Goridge::create(),
+    WorkerFactoryInterface::class => WorkerFactory::class,
     WorkerFactory::class => fn () => WorkerFactory::create(),
     HostConnectionInterface::class => fn () => RoadRunner::create(),
+
+    TemporalDeclarationProvider::class => fn () => new TemporalDeclarationProvider(
+        $temporalParams['workflows'] ?? [],
+        $temporalParams['activities'] ?? [],
+    ),
 ];
