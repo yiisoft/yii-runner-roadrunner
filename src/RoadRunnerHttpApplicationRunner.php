@@ -11,6 +11,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionClass;
 use RuntimeException;
 use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Environment\Mode;
@@ -31,6 +32,7 @@ use Yiisoft\Yii\Runner\ApplicationRunner;
 use Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider;
 
 use function gc_collect_cycles;
+use function interface_exists;
 
 /**
  * `RoadRunnerHttpApplicationRunner` runs the Yii HTTP application using RoadRunner.
@@ -265,7 +267,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         $worker->registerWorkflowTypes(...$workflows);
 
         /** @psalm-suppress MixedReturnStatement,MixedInferredReturnType */
-        $activityFactory = static fn (\ReflectionClass $class): object => $container->get($class->getName());
+        $activityFactory = static fn (ReflectionClass $class): object => $container->get($class->getName());
         $activityFinalizer = static function () use ($container): void {
             /** @psalm-suppress MixedMethodCall */
             $container
@@ -284,6 +286,6 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
 
     private function isTemporalSDKInstalled(): bool
     {
-        return class_exists(WorkerFactoryInterface::class);
+        return interface_exists(WorkerFactoryInterface::class);
     }
 }
