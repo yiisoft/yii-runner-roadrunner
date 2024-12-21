@@ -192,7 +192,7 @@ Temporal is a distributed, scalable, durable, and highly available orchestration
 
 Explore more about Temporal on the official website https://temporal.io and in the sdk repository: https://github.com/temporalio/sdk-php.
 
-[//]: # (If you want to add support for Temporal you need to install the SDK and configure workflows and activities.)
+> If you want to add support for Temporal you need to install the SDK and configure workflows and activities.
 
 ### Installation
 
@@ -228,34 +228,39 @@ class MyWorkflow
 
 ```
 
-To make the temporal engine see your activities and workflows you should configure the dependency injection container.
-Add the tags `tag@temporal.activity` and `tag@temporal.workflow` to your services:
+Configure Temporal engine to make it able to work with your activities and workflows.
+
+Mention these classes in the `params.php`:
 
 ```php
-// config/common/temporal.php
+// config/common/params.php
 
 return [
-    'tag@temporal.activity' => [
-        \App\Activity\MyActivity::class,
-    ],
-    'tag@temporal.workflow' => [
-        \App\Workflow\MyWorkflow::class,
+    'yiisoft/yii-runner-roadrunner' => [
+        'temporal' => [
+            'enabled' => true,
+            'host' => 'localhost:7233', // host of Temporal engine
+            'workflows' => [
+                \App\Workflow\MyWorkflow::class,
+            ],
+            'activities' => [
+                \App\Activity\MyActivity::class,
+            ],
+        ],
     ],
 ]
 ```
 
 > If you use another container instead of `yiisoft/di`, make sure that 
-> `$container->get('tag@temporal.activity')` and `$container->get('tag@temporal.workflow')`
-> return all of your workflows and activities.
+> `\Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider` 
+> is registered and returns all of your workflows and activities.
 
-The last two things are to call `withEnabledTemporal(true)` on the `RoadRunnerApplicationRunner` and to add the following snippet to `config/params.php`:
+The last two things are to call `withEnabledTemporal(true)` on the `\Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner` and to add the following snippet to `config/params.php`:
 
 ```php
-'yiisoft/yii-runner-roadrunner' => [
-    'temporal' => [
-        'enabled' => true,
-    ]
-]
+(new RoadRunnerHttpApplicationRunner())
+    ->withTemporalEnabled()
+    ->run();
 ```
 
 ## Testing

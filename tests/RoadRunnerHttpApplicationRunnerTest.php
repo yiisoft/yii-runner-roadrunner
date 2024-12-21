@@ -70,7 +70,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $runner = $this->createRunner();
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Temporal support is disabled. You should call `withEnabledTemporal(true)` to enable temporal support.');
+        $this->expectExceptionMessage('Temporal support is disabled. You should call `withTemporalEnabled(true)` to enable temporal support.');
         $runner->run();
     }
 
@@ -84,7 +84,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $container = $this->createContainer();
 
         $runner = $this->createRunner()
-            ->withEnabledTemporal(true)
+            ->withTemporalEnabled(true)
             ->withContainer($container);
 
         $runner->run();
@@ -290,7 +290,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $this->assertNotSame($runner, $runner->withConfig($this->createConfig()));
         $this->assertNotSame($runner, $runner->withContainer($this->createContainer()));
         $this->assertNotSame($runner, $runner->withTemporaryErrorHandler($this->createErrorHandler()));
-        $this->assertNotSame($runner, $runner->withEnabledTemporal(true));
+        $this->assertNotSame($runner, $runner->withTemporalEnabled(true));
         $this->assertNotSame($runner, $runner->withPsr7Worker(new Psr7WorkerMock()));
     }
 

@@ -126,7 +126,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
     /**
      * Returns a new instance with enabled temporal support.
      */
-    public function withEnabledTemporal(bool $value): self
+    public function withTemporalEnabled(bool $value): self
     {
         if (!$this->isTemporalSDKInstalled()) {
             throw new Exception('Temporal SDK is not installed. To install the SDK run `composer require temporal/sdk`.');
@@ -163,7 +163,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         if ($env->getMode() === Mode::MODE_TEMPORAL) {
             if (!$this->isTemporalEnabled) {
                 throw new RuntimeException(
-                    'Temporal support is disabled. You should call `withEnabledTemporal(true)` to enable temporal support.',
+                    'Temporal support is disabled. You should call `withTemporalEnabled(true)` to enable temporal support.',
                 );
             }
             $this->runTemporal($container);
