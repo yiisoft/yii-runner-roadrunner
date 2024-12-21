@@ -284,6 +284,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         }
         $worker->registerActivityFinalizer($activityFinalizer);
 
+        /** @psalm-suppress TooManyArguments */
         $factory->run($host);
     }
 
