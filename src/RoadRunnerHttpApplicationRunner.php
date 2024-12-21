@@ -16,6 +16,7 @@ use RuntimeException;
 use Spiral\RoadRunner\Environment;
 use Spiral\RoadRunner\Environment\Mode;
 use Spiral\RoadRunner\Http\PSR7WorkerInterface;
+use Temporal\Worker\Transport\HostConnectionInterface;
 use Temporal\Worker\WorkerFactoryInterface;
 use Throwable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -256,6 +257,8 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
     {
         /** @var TemporalDeclarationProvider $temporalDeclarationProvider */
         $temporalDeclarationProvider = $container->get(TemporalDeclarationProvider::class);
+        /** @var HostConnectionInterface $host */
+        $host = $container->get(HostConnectionInterface::class);
 
         /** @var WorkerFactoryInterface $factory */
         $factory = $container->get(WorkerFactoryInterface::class);
@@ -281,7 +284,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         }
         $worker->registerActivityFinalizer($activityFinalizer);
 
-        $factory->run();
+        $factory->run($host);
     }
 
     private function isTemporalSDKInstalled(): bool
