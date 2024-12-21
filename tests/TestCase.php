@@ -27,6 +27,7 @@ use Temporal\DataConverter\DataConverterInterface;
 use Temporal\Worker\Transport\Goridge;
 use Temporal\Worker\Transport\HostConnectionInterface;
 use Temporal\Worker\Transport\RPCConnectionInterface;
+use Temporal\Worker\WorkerFactoryInterface;
 use Temporal\WorkerFactory;
 use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
@@ -42,6 +43,7 @@ use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Http\Handler\NotFoundHandler;
+use Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\PlainTextRendererMock;
 use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\TemporalHostConnection;
 
@@ -60,13 +62,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             UriFactoryInterface::class => UriFactory::class,
             UploadedFileFactoryInterface::class => UploadedFileFactory::class,
             ThrowableRendererInterface::class => PlainTextRendererMock::class,
+            TemporalDeclarationProvider::class => new TemporalDeclarationProvider([],[]),
 
             /**
              * Temporal related definitions.
              */
             DataConverterInterface::class => fn () => DataConverter::createDefault(),
             RPCConnectionInterface::class => fn () => Goridge::create(),
-            WorkerFactory::class => fn () => WorkerFactory::create(),
+            WorkerFactoryInterface::class => fn () => WorkerFactory::create(),
             HostConnectionInterface::class => fn () => new TemporalHostConnection(),
 
             ErrorCatcher::class => [
