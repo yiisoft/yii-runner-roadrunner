@@ -62,7 +62,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             UriFactoryInterface::class => UriFactory::class,
             UploadedFileFactoryInterface::class => UploadedFileFactory::class,
             ThrowableRendererInterface::class => PlainTextRendererMock::class,
-            TemporalDeclarationProvider::class => new TemporalDeclarationProvider([],[]),
+            TemporalDeclarationProvider::class => new TemporalDeclarationProvider([], []),
 
             /**
              * Temporal related definitions.
