@@ -57,7 +57,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $runner = $this->createRunner();
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Unsupported mode "invalid", modes are supported: "http", "temporal".');
+        $this->expectExceptionMessage('Unsupported mode "invalid", supported modes are: "http", "temporal".');
         $runner->run();
     }
 
