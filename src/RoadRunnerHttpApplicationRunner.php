@@ -175,7 +175,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
         }
 
         throw new RuntimeException(sprintf(
-            'Unsupported mode "%s", modes are supported: "%s".',
+            'Unsupported mode "%s", supported modes are: "%s".',
             $env->getMode(),
             implode('", "', [Mode::MODE_HTTP, Mode::MODE_TEMPORAL]),
         ));

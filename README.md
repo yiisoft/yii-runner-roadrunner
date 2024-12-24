@@ -190,7 +190,7 @@ $runner = $runner->withPsr7Worker($psr7Worker);
 
 Temporal is a distributed, scalable, durable, and highly available orchestration engine used to execute asynchronous long-running business logic in a scalable and resilient way.
 
-Explore more about Temporal on the official website https://temporal.io and in the sdk repository: https://github.com/temporalio/sdk-php.
+Explore more about Temporal on [the official website](https://temporal.io) and in [the SDK repository](https://github.com/temporalio/sdk-php).
 
 > If you want to add support for Temporal you need to install the SDK and configure workflows and activities.
 
@@ -228,9 +228,7 @@ class MyWorkflow
 
 ```
 
-Configure Temporal engine to make it able to work with your activities and workflows.
-
-Mention these classes in the `params.php`:
+Configure Temporal engine to make it able to work with your activities and workflows in the `params.php`:
 
 ```php
 // config/common/params.php
@@ -255,7 +253,7 @@ return [
 > `\Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider` 
 > is registered and returns all of your workflows and activities.
 
-The last two things are to call `withEnabledTemporal(true)` on the `\Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner` and to add the following snippet to `config/params.php`:
+The last two things are to call `withTemporalEnabled()` on the `\Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner` and to add the following snippet to `config/params.php`:
 
 ```php
 (new RoadRunnerHttpApplicationRunner())
