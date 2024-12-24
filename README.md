@@ -192,7 +192,7 @@ Temporal is a distributed, scalable, durable, and highly available orchestration
 
 Explore more about Temporal on [the official website](https://temporal.io) and in [the SDK repository](https://github.com/temporalio/sdk-php).
 
-> If you want to add support for Temporal you need to install the SDK and configure workflows and activities.
+> If you want to add support for Temporal you need to install the SDK and configure workflows and activities as described below.
 
 ### Installation
 
