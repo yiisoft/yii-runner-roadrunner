@@ -1,0 +1,6 @@
+{
+    "symbol-whitelist" : [
+        "Temporal\\Worker\\WorkerFactoryInterface",
+        "Temporal\\Worker\\Transport\\HostConnectionInterface"
+    ]
+}
