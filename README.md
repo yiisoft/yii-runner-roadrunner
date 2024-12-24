@@ -202,7 +202,7 @@ composer require temporal/sdk
 
 ### Configuration
 
-Temporal has at least two main class types: Activity and Workflow.
+Temporal has at least two main class types: [Activity](https://docs.temporal.io/activities) and [Workflow](https://docs.temporal.io/workflows).
 Any activity must have the attribute `\Temporal\Activity\ActivityInterface`:
 
 ```php
