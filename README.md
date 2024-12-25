@@ -253,7 +253,7 @@ return [
 > `\Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider` 
 > is registered and returns all of your workflows and activities.
 
-The last two things are to call `withTemporalEnabled()` on the `\Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner` and to add the following snippet to `config/params.php`:
+The last two things are to call `withTemporalEnabled(true)` on the `\Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner` in the `public/index.php`:
 
 ```php
 (new RoadRunnerHttpApplicationRunner())
