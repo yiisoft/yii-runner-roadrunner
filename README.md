@@ -257,7 +257,7 @@ The last two things are to call `withTemporalEnabled()` on the `\Yiisoft\Yii\Run
 
 ```php
 (new RoadRunnerHttpApplicationRunner())
-    ->withTemporalEnabled()
+    ->withTemporalEnabled(true)
     ->run();
 ```
 
