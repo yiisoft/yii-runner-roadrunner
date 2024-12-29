@@ -186,6 +186,86 @@ You can also use your own implementation of the `Spiral\RoadRunner\Http\PSR7Work
 $runner = $runner->withPsr7Worker($psr7Worker);
 ```
 
+## Temporal
+
+Temporal is a distributed, scalable, durable, and highly available orchestration engine used to execute asynchronous long-running business logic in a scalable and resilient way.
+
+Explore more about Temporal on [the official website](https://temporal.io) and in [the SDK repository](https://github.com/temporalio/sdk-php).
+
+> If you want to add support for Temporal you need to install the SDK and configure workflows and activities as described below.
+
+### Installation
+
+```shell
+composer require temporal/sdk
+```
+
+### Configuration
+
+Temporal has at least two main class types: [Activity](https://docs.temporal.io/activities) and [Workflow](https://docs.temporal.io/workflows).
+Any activity must have the attribute `\Temporal\Activity\ActivityInterface`:
+
+```php
+namespace App\Activity;
+
+#[\Temporal\Activity\ActivityInterface]
+class MyActivity
+{
+   // ...
+}
+```
+
+Any workflow must have the attribute `\Temporal\Workflow\WorkflowInterface`.
+
+```php
+namespace App\Workflow;
+
+#[\Temporal\Workflow\WorkflowInterface]
+class MyWorkflow
+{
+   // ...
+}
+
+```
+
+Configure Temporal engine to make it able to work with your activities and workflows in the `params.php`:
+
+```php
+// config/common/params.php
+
+return [
+    'yiisoft/yii-runner-roadrunner' => [
+        'temporal' => [
+            'enabled' => true,
+            'host' => 'localhost:7233', // host of Temporal engine
+            'workflows' => [
+                \App\Workflow\MyWorkflow::class,
+            ],
+            'activities' => [
+                \App\Activity\MyActivity::class,
+            ],
+        ],
+    ],
+]
+```
+
+> If you use another container instead of `yiisoft/di`, make sure that 
+> `\Yiisoft\Yii\Runner\RoadRunner\Temporal\TemporalDeclarationProvider` 
+> is registered and returns all of your workflows and activities.
+
+The last thing is to call `withTemporalEnabled(true)` on the `\Yiisoft\Yii\Runner\RoadRunner\RoadRunnerHttpApplicationRunner` in the `public/index.php`:
+
+```php
+(new RoadRunnerHttpApplicationRunner())
+    ->withTemporalEnabled(true)
+    ->run();
+```
+
+## Testing
+
+### Unit testing
+
+The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
 ## Documentation
 
 - Guide: [English](docs/guide/en/README.md), [Português - Brasil](docs/guide/pt-BR/README.md), [Русский](docs/guide/ru/README.md)

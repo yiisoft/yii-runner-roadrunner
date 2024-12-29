@@ -10,6 +10,8 @@
 
 ## 3.0.0 February 22, 2024
 
+- Enh #39: Add temporal support (@xepozz)
+- Enh #35: Add composer require checker into CI (@xepozz)
 - Chg #23: Rename `RoadRunnerApplicationRunner` to `RoadRunnerHttpApplicationRunner` (@s1lver)
 - Chg #61: Increased minimum PHP version to 8.1 (@s1lver)
 - Enh #67, #76: Added runner for gRPC requests (@s1lver)

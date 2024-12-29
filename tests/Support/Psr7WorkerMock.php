@@ -67,6 +67,16 @@ final class Psr7WorkerMock implements PSR7WorkerInterface
             public function stop(): void
             {
             }
+
+            public function hasPayload(string $class = null): bool
+            {
+                return false;
+            }
+
+            public function getPayload(string $class = null): ?Payload
+            {
+                return null;
+            }
         };
     }
 }
