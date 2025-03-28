@@ -13,10 +13,11 @@ use Spiral\RoadRunner\GRPC\Server;
 use Spiral\RoadRunner\GRPC\ServiceInterface;
 use Spiral\RoadRunner\Worker;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Di\NotFoundException;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Exception\ErrorException;
-use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
+use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Runner\ApplicationRunner;
@@ -56,13 +57,13 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         bool $debug = false,
         bool $checkEvents = false,
         ?string $environment = null,
-        string $bootstrapGroup = 'bootstrap-web',
-        string $eventsGroup = 'events-web',
-        string $diGroup = 'di-web',
-        string $diProvidersGroup = 'di-providers-web',
-        string $diDelegatesGroup = 'di-delegates-web',
-        string $diTagsGroup = 'di-tags-web',
-        string $paramsGroup = 'params-web',
+        string $bootstrapGroup = 'bootstrap-grpc',
+        string $eventsGroup = 'events-grpc',
+        string $diGroup = 'di-grpc',
+        string $diProvidersGroup = 'di-providers-grpc',
+        string $diDelegatesGroup = 'di-delegates-grpc',
+        string $diTagsGroup = 'di-tags-grpc',
+        string $paramsGroup = 'params-grpc',
         array $nestedParamsGroups = ['params'],
         array $nestedEventsGroups = ['events'],
     ) {
@@ -113,7 +114,12 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
          * @var class-string<ServiceInterface> $interface
          */
         foreach ($this->getServices() as $interface) {
-            $server->registerService($interface, $container->get($interface));
+            try {
+                $server->registerService($interface, $container->get($interface));
+            } catch (NotFoundException $exception) {
+                $actualErrorHandler->handle($exception);
+                throw  $exception;
+            }
         }
 
         $server->serve($this->getWorker(), finalize: function () use ($container) {
@@ -121,13 +127,16 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         });
     }
 
+    /**
+     * @return ErrorHandler
+     */
     private function createTemporaryErrorHandler(): ErrorHandler {
         if ($this->temporaryErrorHandler !== null) {
             return $this->temporaryErrorHandler;
         }
 
-        $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/app.log")]);
-        return new ErrorHandler($logger, new HtmlRenderer());
+        $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/grpc.log")]);
+        return new ErrorHandler($logger, new PlainTextRenderer());
     }
 
     /**
@@ -174,7 +183,7 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
      * @param array $services Services array (key-value pairs)
      * ```php
      * [
-     *      ServiceInterface::class => Service::class
+     *      ServiceInterface::class
      * ]
      * ```
      *
