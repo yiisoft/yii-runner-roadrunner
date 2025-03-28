@@ -13,7 +13,6 @@ use Spiral\RoadRunner\GRPC\Server;
 use Spiral\RoadRunner\GRPC\ServiceInterface;
 use Spiral\RoadRunner\Worker;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Di\NotFoundException;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Exception\ErrorException;
@@ -114,12 +113,9 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
          * @var class-string<ServiceInterface> $interface
          */
         foreach ($this->getServices() as $interface) {
-            try {
-                $server->registerService($interface, $container->get($interface));
-            } catch (NotFoundException $exception) {
-                $actualErrorHandler->handle($exception);
-                throw  $exception;
-            }
+            /** @var ServiceInterface $service */
+            $service = $container->get($interface);
+            $server->registerService($interface, $service);
         }
 
         $server->serve($this->getWorker(), finalize: function () use ($container) {
