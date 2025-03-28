@@ -4,11 +4,21 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Runner\RoadRunner;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Spiral\RoadRunner\GRPC\Invoker;
 use Spiral\RoadRunner\GRPC\InvokerInterface;
 use Spiral\RoadRunner\GRPC\Server;
 use Spiral\RoadRunner\GRPC\ServiceInterface;
 use Spiral\RoadRunner\Worker;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Di\StateResetter;
+use Yiisoft\ErrorHandler\ErrorHandler;
+use Yiisoft\ErrorHandler\Exception\ErrorException;
+use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
+use Yiisoft\Log\Logger;
+use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Runner\ApplicationRunner;
 
 /**
@@ -16,6 +26,7 @@ use Yiisoft\Yii\Runner\ApplicationRunner;
  */
 final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 {
+    private ?ErrorHandler $temporaryErrorHandler = null;
     private ?InvokerInterface $invoker = null;
     private array $services = [];
     private ?Worker $worker = null;
@@ -72,21 +83,76 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         );
     }
 
+    /**
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws ErrorException
+     * @throws NotFoundExceptionInterface
+     * @throws \ErrorException
+     * @throws InvalidConfigException
+     */
     public function run(): void
     {
+        // Register temporary error handler to catch error while container is building.
+        $temporaryErrorHandler = $this->createTemporaryErrorHandler();
+        $this->registerErrorHandler($temporaryErrorHandler);
+
+        $container = $this->getContainer();
+
+        // Register error handler with real container-configured dependencies.
+        /** @var ErrorHandler $actualErrorHandler */
+        $actualErrorHandler = $container->get(ErrorHandler::class);
+        $this->registerErrorHandler($actualErrorHandler, $temporaryErrorHandler);
+
+        $this->runBootstrap();
+        $this->checkEvents();
+
         $server = new Server($this->getInvoker(), ['debug' => $this->debug]);
 
         /**
          * @var class-string<ServiceInterface> $interface
-         * @var ServiceInterface $service
          */
-        foreach ($this->getServices() as $interface => $service) {
-            $server->registerService($interface, new $service());
+        foreach ($this->getServices() as $interface) {
+            $server->registerService($interface, $container->get($interface));
         }
 
-        $server->serve($this->getWorker(), static function () {
-            gc_collect_cycles();
+        $server->serve($this->getWorker(), finalize: function () use ($container) {
+            $this->afterRespond($container);
         });
+    }
+
+    private function createTemporaryErrorHandler(): ErrorHandler {
+        if ($this->temporaryErrorHandler !== null) {
+            return $this->temporaryErrorHandler;
+        }
+
+        $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/app.log")]);
+        return new ErrorHandler($logger, new HtmlRenderer());
+    }
+
+    /**
+     * @throws ErrorException
+     */
+    private function registerErrorHandler(ErrorHandler $registered, ErrorHandler $unregistered = null): void {
+        $unregistered?->unregister();
+
+        if ($this->debug) {
+            $registered->debug();
+        }
+
+        $registered->register();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function afterRespond(ContainerInterface $container): void {
+        /** @psalm-suppress MixedMethodCall */
+        $container->get(StateResetter::class)->reset();
+        gc_collect_cycles();
     }
 
     /**
