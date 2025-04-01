@@ -5,72 +5,25 @@ declare(strict_types=1);
 // Do not edit. Content will be replaced.
 return [
     '/' => [
-        'di-web' => [
-            '/' => [
-                'web/di/*.php',
-            ],
-        ],
         'params' => [
             '/' => [
                 'params.php',
             ],
         ],
-        'events-web' => [
-            '/' => [
-                '$events',
-            ],
-        ],
         'params-web' => [
             '/' => [
-                '$params',
+                'params.php',
             ],
         ],
-        'params-grpc' => [
+        'di-web' => [
             '/' => [
-                '$params',
+                'di-web.php',
+                'di-grpc-services.php'
             ],
         ],
-        'di-grpc' => [
+        'events-web' => [
             '/' => [
-                'grpc/di/*.php',
-            ],
-        ],
-        'di-delegates' => [
-            '/' => [
-                'di-delegates.php'
-            ],
-        ],
-        'di-delegates-grpc' => [
-            '/' => [
-                '$di-delegates',
-            ],
-        ],
-        'di-delegates-web' => [
-            '/' => [
-                '$di-delegates',
-            ],
-        ],
-        'di-providers' => [
-            '/' => [
-                'di-providers.php'
-            ],
-        ],
-        'di-providers-grpc' => [
-            '/' => [
-                '$di-providers',
-            ],
-        ],
-        'di-providers-web' => [
-            '/' => [
-                '$di-providers',
-            ],
-        ],
-        'events' => [
-            '/' => [],
-        ],
-        'events-grpc' => [
-            '/' => [
-                '$events',
+                'events-web.php',
             ],
         ],
         'events-fail' => [
@@ -78,19 +31,19 @@ return [
                 'events-fail.php',
             ],
         ],
-        'bootstrap' => [
-            '/' => [],
+        'di-providers-web' => [
+            '/' => [
+                'di-providers-web.php',
+            ],
+        ],
+        'di-delegates-web' => [
+            '/' => [
+                'di-delegates-web.php',
+            ],
         ],
         'bootstrap-web' => [
             '/' => [
-                '$bootstrap',
-                'web/bootstrap.php',
-            ],
-        ],
-        'bootstrap-grpc' => [
-            '/' => [
-                '$bootstrap',
-                'grpc/bootstrap.php',
+                'bootstrap-web.php',
             ],
         ],
     ],
