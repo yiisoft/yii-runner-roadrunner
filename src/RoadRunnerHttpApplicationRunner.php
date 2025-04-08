@@ -194,7 +194,7 @@ final class RoadRunnerHttpApplicationRunner extends ApplicationRunner
     /**
      * @throws ErrorException
      */
-    private function registerErrorHandler(ErrorHandler $registered, ErrorHandler $unregistered = null): void
+    private function registerErrorHandler(ErrorHandler $registered, ?ErrorHandler $unregistered = null): void
     {
         $unregistered?->unregister();
 
