@@ -10,8 +10,8 @@ application when you upgrade the package from one version to another.
 ## Upgrade from 3.1.0
 
 - Added error handler at the run of the application `RoadRunnerGrpcApplicationRunner`
-- Using DI container for getting service class
-- Added call run bootstrap and checking events at the run `gRPC` application
+- DI container is now used for getting service classes
+- Added calls to run bootstrap and checking events in the run method of `gRPC` application
 
 ## Upgrade from 2.x
 
