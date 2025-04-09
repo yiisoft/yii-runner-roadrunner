@@ -35,7 +35,6 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Factory\ThrowableResponseFactory;
-use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\ErrorHandler\ThrowableRendererInterface;
 use Yiisoft\ErrorHandler\ThrowableResponseFactoryInterface;
 use Yiisoft\Http\Method;
