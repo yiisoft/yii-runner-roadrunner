@@ -14,6 +14,17 @@ Uma descrição detalhada de como fazer isso pode ser lida em <https://roadrunne
 
 ### Criar trabalhador para gRPC
 
+Insira o arquivo de serviços no diretório de configuração do diretório, por exemplo - `grpc-services.php`:
+
+```php
+<?php 
+declare(strict_types=1);
+
+return [
+    PingerInterface::class => PingerService::class
+];
+```
+
 Crie um arquivo handler no diretório do seu aplicativo, por exemplo `GrpcWorker.php`:
 
 ```php
@@ -27,9 +38,7 @@ $application = new RoadRunnerGrpcApplicationRunner(
     rootPath: __DIR__,
     debug: true
 );
-$application->setServices([
-        PingerInterface::class => Pinger::class,
-    ])
+$application->setServices([PingerInterface::class])
 $application->run();
 ```
 

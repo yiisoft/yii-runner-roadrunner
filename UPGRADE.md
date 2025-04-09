@@ -7,6 +7,12 @@ application when you upgrade the package from one version to another.
 > to upgrade from version A to version C and there is version B between A and C, you need
 > to following the instructions for both A and B.
 
+## Upgrade from 3.1.0
+
+- Added error handler at the run of the application `RoadRunnerGrpcApplicationRunner`
+- DI container is now used for getting service classes
+- Added calls to run bootstrap and checking events in the run method of `gRPC` application
+
 ## Upgrade from 2.x
 
 - `RoadRunnerApplicationRunner` has been renamed to `RoadRunnerHttpApplicationRunner`

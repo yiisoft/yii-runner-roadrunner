@@ -17,9 +17,7 @@ final class RoadRunnerGrpcApplicationRunnerTest extends TestCase
 {
     public function testSetServices(): void
     {
-        $services = [
-            EchoInterface::class => EchoService::class,
-        ];
+        $services = [EchoInterface::class];
         $runner = $this->createRunner();
 
         self::assertEmpty($runner->getServices());
