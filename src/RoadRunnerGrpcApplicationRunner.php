@@ -123,9 +123,6 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         });
     }
 
-    /**
-     * @return ErrorHandler
-     */
     private function createTemporaryErrorHandler(): ErrorHandler {
         if ($this->temporaryErrorHandler !== null) {
             return $this->temporaryErrorHandler;
