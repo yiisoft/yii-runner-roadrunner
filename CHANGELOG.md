@@ -6,7 +6,7 @@
 
 ## 3.1.0 April 1, 2025
 
-- Add error handler, add loading bootstrap and check events. Using DI container (@IbragimovDiyorbek)
+- Enh #92: Add error handler, add loading bootstrap and check events. Using DI container (@IbragimovDiyorbek)
 
 ## 3.0.1 April 23, 2024
 
