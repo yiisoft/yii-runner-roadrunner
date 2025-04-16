@@ -84,6 +84,21 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
     }
 
     /**
+     * Returns a new instance with the specified temporary error handler instance {@see ErrorHandler}.
+     *
+     * A temporary error handler is needed to handle the creation of configuration and container instances,
+     * then the error handler configured in your application configuration will be used.
+     *
+     * @param ErrorHandler $temporaryErrorHandler The temporary error handler instance.
+     */
+    public function withTemporaryErrorHandler(ErrorHandler $temporaryErrorHandler): self
+    {
+        $new = clone $this;
+        $new->temporaryErrorHandler = $temporaryErrorHandler;
+        return $new;
+    }
+
+    /**
      * @return void
      * @throws ContainerExceptionInterface
      * @throws ErrorException
