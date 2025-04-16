@@ -84,7 +84,6 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
     }
 
     /**
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws ErrorException
      * @throws NotFoundExceptionInterface
