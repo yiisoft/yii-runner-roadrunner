@@ -1,6 +1,6 @@
 # Yii RoadRunner Runner Change Log
 
-## 4.0.0 under development
+## 3.1.0 under development
 
 - Chg #95: Raise required version of `yiisoft/error-handler` to `^4.0` (@batyrmastyr)
 - Chg #95: Change PHP constraint in composer.json to 8.1 - 8.4 (@batyrmastyr)
