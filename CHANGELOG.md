@@ -4,7 +4,7 @@
 
 - Chg #95: Raise required version of `yiisoft/error-handler` to `^4.0` (@batyrmastyr)
 - Chg #95: Change PHP constraint in composer.json to 8.1 - 8.4 (@batyrmastyr)
-- Chg #95: Explicitly mark nullable parameters (@batyrmastyr)
+- Bug #95: Explicitly mark nullable parameters (@batyrmastyr)
 
 ## 3.0.1 April 23, 2024
 
