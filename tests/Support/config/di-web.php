@@ -75,6 +75,4 @@ return [
             'fallbackHandler' => Reference::to(NotFoundHandler::class),
         ],
     ],
-
-    BootstrapStatusProvider::class => BootstrapStatusProvider::class
 ];
