@@ -1,10 +1,6 @@
 # Yii RoadRunner Runner Change Log
 
-## 3.1.1 under development
-
-- no changes in this release.
-
-## 3.1.0 April 1, 2025
+## 3.1.0 under development
 
 - Enh #92: Add error handler, add loading bootstrap and check events. Using DI container (@IbragimovDiyorbek)
 
