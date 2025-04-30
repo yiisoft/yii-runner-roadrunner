@@ -7,6 +7,8 @@ namespace Yiisoft\Yii\Runner\RoadRunner;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Spiral\RoadRunner\GRPC\Invoker;
 use Spiral\RoadRunner\GRPC\InvokerInterface;
 use Spiral\RoadRunner\GRPC\Server;
@@ -16,6 +18,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Exception\ErrorException;
+use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
 use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
@@ -26,7 +29,6 @@ use Yiisoft\Yii\Runner\ApplicationRunner;
  */
 final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 {
-    private ?ErrorHandler $temporaryErrorHandler = null;
     private ?InvokerInterface $invoker = null;
     private array $services = [];
     private ?Worker $worker = null;
@@ -65,6 +67,8 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         string $paramsGroup = 'params-web',
         array $nestedParamsGroups = ['params'],
         array $nestedEventsGroups = ['events'],
+        private readonly ?LoggerInterface $logger = null,
+        private ?ErrorHandler $temporaryErrorHandler = null
     ) {
         parent::__construct(
             $rootPath,
@@ -138,13 +142,9 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         });
     }
 
-    private function createTemporaryErrorHandler(): ErrorHandler {
-        if ($this->temporaryErrorHandler !== null) {
-            return $this->temporaryErrorHandler;
-        }
-
-        $logger = new Logger([new FileTarget("$this->rootPath/runtime/logs/grpc.log")]);
-        return new ErrorHandler($logger, new PlainTextRenderer());
+    private function createTemporaryErrorHandler(): ErrorHandler
+    {
+        return $this->temporaryErrorHandler ?? new ErrorHandler($this->logger ?? new NullLogger(), new HtmlRenderer());
     }
 
     /**
