@@ -34,8 +34,9 @@ use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\ErrorHandler\ErrorHandler;
-use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
+use Yiisoft\ErrorHandler\Factory\ThrowableResponseFactory;
 use Yiisoft\ErrorHandler\ThrowableRendererInterface;
+use Yiisoft\ErrorHandler\ThrowableResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
@@ -72,7 +73,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             WorkerFactoryInterface::class => fn () => WorkerFactory::create(),
             HostConnectionInterface::class => fn () => new TemporalHostConnection(),
 
-            ErrorCatcher::class => [
+            ThrowableResponseFactoryInterface::class => ThrowableResponseFactory::class,
+            ThrowableResponseFactory::class => [
                 'forceContentType()' => ['text/plain'],
                 'withRenderer()' => ['text/plain', PlainTextRendererMock::class],
             ],

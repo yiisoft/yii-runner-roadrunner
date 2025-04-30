@@ -32,7 +32,7 @@ final class RoadRunnerHttpWorker
     private ErrorCatcher $errorCatcher;
     private ErrorHandler $errorHandler;
 
-    public function __construct(ContainerInterface $container, PSR7WorkerInterface $worker = null)
+    public function __construct(ContainerInterface $container, ?PSR7WorkerInterface $worker = null)
     {
         /** @psalm-var ResponseFactoryInterface $this->responseFactory */
         $this->responseFactory = $container->get(ResponseFactoryInterface::class);
@@ -54,7 +54,7 @@ final class RoadRunnerHttpWorker
         $this->worker->respond($response);
     }
 
-    public function respondWithError(Throwable $throwable, ServerRequestInterface $request = null): ResponseInterface
+    public function respondWithError(Throwable $throwable, ?ServerRequestInterface $request = null): ResponseInterface
     {
         if ($request === null) {
             $errorData = $this->errorHandler->handle($throwable);

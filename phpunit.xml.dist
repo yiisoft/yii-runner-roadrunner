@@ -6,6 +6,7 @@
     colors="true"
     failOnRisky="true"
     failOnWarning="true"
+    failOnDeprecation="true"
     stopOnFailure="false"
     executionOrder="random"
     resolveDependencies="true"
