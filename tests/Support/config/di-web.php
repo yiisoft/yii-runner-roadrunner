@@ -23,16 +23,17 @@ use Psr\Log\LoggerInterface;
 use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\ErrorHandler\ErrorHandler;
-use Yiisoft\ErrorHandler\Factory\ThrowableResponseFactory;
 use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
+use Yiisoft\ErrorHandler\RendererProvider\ContentTypeRendererProvider;
+use Yiisoft\ErrorHandler\RendererProvider\RendererProviderInterface;
 use Yiisoft\ErrorHandler\ThrowableRendererInterface;
+use Yiisoft\ErrorHandler\ThrowableResponseFactory;
 use Yiisoft\ErrorHandler\ThrowableResponseFactoryInterface;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Http\Handler\NotFoundHandler;
-use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\PlainTextRendererMock;
 
 return [
     EventDispatcherInterface::class => SimpleEventDispatcher::class,
@@ -45,10 +46,7 @@ return [
     UploadedFileFactoryInterface::class => UploadedFileFactory::class,
 
     ThrowableResponseFactoryInterface::class => ThrowableResponseFactory::class,
-    ThrowableResponseFactory::class => [
-        'forceContentType()' => ['text/plain'],
-        'withRenderer()' => ['text/plain', PlainTextRendererMock::class],
-    ],
+    RendererProviderInterface::class => ContentTypeRendererProvider::class,
 
     ErrorHandler::class => [
         'reset' => function () {

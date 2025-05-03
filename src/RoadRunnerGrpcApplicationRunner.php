@@ -144,7 +144,7 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 
     private function createTemporaryErrorHandler(): ErrorHandler
     {
-        return $this->temporaryErrorHandler ?? new ErrorHandler($this->logger ?? new NullLogger(), new HtmlRenderer());
+        return $this->temporaryErrorHandler ?? new ErrorHandler($this->logger ?? new NullLogger(), new PlainTextRenderer());
     }
 
     /**
