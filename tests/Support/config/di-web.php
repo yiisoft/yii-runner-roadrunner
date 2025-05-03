@@ -23,9 +23,10 @@ use Psr\Log\LoggerInterface;
 use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\ErrorHandler\ErrorHandler;
-use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
+use Yiisoft\ErrorHandler\Factory\ThrowableResponseFactory;
 use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
 use Yiisoft\ErrorHandler\ThrowableRendererInterface;
+use Yiisoft\ErrorHandler\ThrowableResponseFactoryInterface;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\Test\Support\Log\SimpleLogger;
@@ -43,7 +44,8 @@ return [
     UriFactoryInterface::class => UriFactory::class,
     UploadedFileFactoryInterface::class => UploadedFileFactory::class,
 
-    ErrorCatcher::class => [
+    ThrowableResponseFactoryInterface::class => ThrowableResponseFactory::class,
+    ThrowableResponseFactory::class => [
         'forceContentType()' => ['text/plain'],
         'withRenderer()' => ['text/plain', PlainTextRendererMock::class],
     ],
