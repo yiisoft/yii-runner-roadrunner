@@ -4,11 +4,24 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Runner\RoadRunner;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Spiral\RoadRunner\GRPC\Invoker;
 use Spiral\RoadRunner\GRPC\InvokerInterface;
 use Spiral\RoadRunner\GRPC\Server;
 use Spiral\RoadRunner\GRPC\ServiceInterface;
 use Spiral\RoadRunner\Worker;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Di\StateResetter;
+use Yiisoft\ErrorHandler\ErrorHandler;
+use Yiisoft\ErrorHandler\Exception\ErrorException;
+use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
+use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
+use Yiisoft\Log\Logger;
+use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Runner\ApplicationRunner;
 
 /**
@@ -54,6 +67,8 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         string $paramsGroup = 'params-web',
         array $nestedParamsGroups = ['params'],
         array $nestedEventsGroups = ['events'],
+        private readonly ?LoggerInterface $logger = null,
+        private ?ErrorHandler $temporaryErrorHandler = null
     ) {
         parent::__construct(
             $rootPath,
@@ -72,21 +87,89 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         );
     }
 
+    /**
+     * Returns a new instance with the specified temporary error handler instance {@see ErrorHandler}.
+     *
+     * A temporary error handler is needed to handle the creation of configuration and container instances,
+     * then the error handler configured in your application configuration will be used.
+     *
+     * @param ErrorHandler $temporaryErrorHandler The temporary error handler instance.
+     */
+    public function withTemporaryErrorHandler(ErrorHandler $temporaryErrorHandler): self
+    {
+        $new = clone $this;
+        $new->temporaryErrorHandler = $temporaryErrorHandler;
+        return $new;
+    }
+
+    /**
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws ErrorException
+     * @throws NotFoundExceptionInterface
+     * @throws \ErrorException
+     * @throws InvalidConfigException
+     */
     public function run(): void
     {
+        // Register temporary error handler to catch error while container is building.
+        $temporaryErrorHandler = $this->createTemporaryErrorHandler();
+        $this->registerErrorHandler($temporaryErrorHandler);
+
+        $container = $this->getContainer();
+
+        // Register error handler with real container-configured dependencies.
+        /** @var ErrorHandler $actualErrorHandler */
+        $actualErrorHandler = $container->get(ErrorHandler::class);
+        $this->registerErrorHandler($actualErrorHandler, $temporaryErrorHandler);
+
+        $this->runBootstrap();
+        $this->checkEvents();
+
         $server = new Server($this->getInvoker(), ['debug' => $this->debug]);
 
         /**
          * @var class-string<ServiceInterface> $interface
-         * @var ServiceInterface $service
          */
-        foreach ($this->getServices() as $interface => $service) {
-            $server->registerService($interface, new $service());
+        foreach ($this->getServices() as $interface) {
+            /** @var ServiceInterface $service */
+            $service = $container->get($interface);
+            $server->registerService($interface, $service);
         }
 
-        $server->serve($this->getWorker(), static function () {
-            gc_collect_cycles();
+        $server->serve($this->getWorker(), finalize: function () use ($container) {
+            $this->afterRespond($container);
         });
+    }
+
+    private function createTemporaryErrorHandler(): ErrorHandler
+    {
+        return $this->temporaryErrorHandler ?? new ErrorHandler($this->logger ?? new NullLogger(), new PlainTextRenderer());
+    }
+
+    /**
+     * @throws ErrorException
+     */
+    private function registerErrorHandler(ErrorHandler $registered, ErrorHandler|null $unregistered = null): void {
+        $unregistered?->unregister();
+
+        if ($this->debug) {
+            $registered->debug();
+        }
+
+        $registered->register();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function afterRespond(ContainerInterface $container): void {
+        /** @psalm-suppress MixedMethodCall */
+        $container->get(StateResetter::class)->reset();
+        gc_collect_cycles();
     }
 
     /**
@@ -108,7 +191,7 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
      * @param array $services Services array (key-value pairs)
      * ```php
      * [
-     *      ServiceInterface::class => Service::class
+     *      ServiceInterface::class
      * ]
      * ```
      *

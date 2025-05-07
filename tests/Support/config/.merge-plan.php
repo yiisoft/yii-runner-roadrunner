@@ -18,6 +18,7 @@ return [
         'di-web' => [
             '/' => [
                 'di-web.php',
+                'di-grpc-services.php'
             ],
         ],
         'events-web' => [

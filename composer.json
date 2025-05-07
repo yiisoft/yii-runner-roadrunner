@@ -41,6 +41,7 @@
         "yiisoft/di": "^1.0",
         "yiisoft/error-handler": "^4.0",
         "yiisoft/http": "^1.2",
+        "psr/log": "^2.0|^3.0",
         "yiisoft/log": "^2.0",
         "yiisoft/log-target-file": "^3.0",
         "yiisoft/yii-http": "^1.0",

@@ -14,6 +14,17 @@ Yii RoadRunner Runner поддерживает запуск сервисов, и
 
 ### Создание gRPC обработчика
 
+Создайте файл сервисов в директории конфигурации приложения, например - `grpc-services.php`:
+
+```php
+<?php 
+declare(strict_types=1);
+
+return [
+    PingerInterface::class => PingerService::class
+];
+```
+
 Создайте файл обработчика в директории вашего приложения, например - `GrpcWorker.php`:
 
 ```php
@@ -29,9 +40,7 @@ $application = new RoadRunnerGrpcApplicationRunner(
     rootPath: __DIR__,
     debug: true
 );
-$application->setServices([
-        PingerInterface::class => Pinger::class,
-    ])
+$application->setServices([PingerInterface::class])
 $application->run();
 ```
 
