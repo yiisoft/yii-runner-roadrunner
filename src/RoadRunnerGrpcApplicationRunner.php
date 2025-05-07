@@ -78,10 +78,15 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 
         /**
          * @var class-string<ServiceInterface> $interface
-         * @var ServiceInterface $service
+         * @var class-string<ServiceInterface> $service
          */
         foreach ($this->getServices() as $interface => $service) {
-            $server->registerService($interface, new $service());
+            /**
+             * @var ServiceInterface $service
+             */
+            $service = $this->getContainer()->get($service);
+
+            $server->registerService($interface, $service);
         }
 
         $server->serve($this->getWorker(), static function () {
