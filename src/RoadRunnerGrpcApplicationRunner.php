@@ -18,10 +18,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Di\StateResetter;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Exception\ErrorException;
-use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
 use Yiisoft\ErrorHandler\Renderer\PlainTextRenderer;
-use Yiisoft\Log\Logger;
-use Yiisoft\Log\Target\File\FileTarget;
 use Yiisoft\Yii\Runner\ApplicationRunner;
 
 /**
@@ -103,7 +100,6 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
     }
 
     /**
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws ErrorException
      * @throws NotFoundExceptionInterface
@@ -150,7 +146,8 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
     /**
      * @throws ErrorException
      */
-    private function registerErrorHandler(ErrorHandler $registered, ErrorHandler|null $unregistered = null): void {
+    private function registerErrorHandler(ErrorHandler $registered, ErrorHandler|null $unregistered = null): void
+    {
         $unregistered?->unregister();
 
         if ($this->debug) {
@@ -162,11 +159,11 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
 
     /**
      * @param ContainerInterface $container
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function afterRespond(ContainerInterface $container): void {
+    private function afterRespond(ContainerInterface $container): void
+    {
         /** @psalm-suppress MixedMethodCall */
         $container->get(StateResetter::class)->reset();
         gc_collect_cycles();

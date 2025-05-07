@@ -14,7 +14,8 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 $application = new RoadRunnerGrpcApplicationRunner(
     rootPath: __DIR__ . '/Support',
     debug: true,
-    bootstrapGroup: 'bootstrap-grpc', logger: new Logger([new FileTarget(__DIR__ . '/Support/runtime/logs/app.log')])
+    bootstrapGroup: 'bootstrap-grpc',
+    logger: new Logger([new FileTarget(__DIR__ . '/Support/runtime/logs/app.log')])
 );
 
 $application->setServices([EchoInterface::class])->run();
