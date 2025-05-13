@@ -1,12 +1,12 @@
 # Yii RoadRunner Runner Change Log
 
-## 3.1.0 under development
+## 3.1.0 May 13, 2025
 
-- Enh #92: Add error handler, add loading bootstrap and check events. Using DI container (@IbragimovDiyorbek)
+- New #39: Add temporal support (@xepozz)
 - Chg #95: Raise required version of `yiisoft/error-handler` to `^4.0` (@batyrmastyr)
 - Chg #95: Change PHP constraint in composer.json to 8.1 - 8.4 (@batyrmastyr)
+- Enh #92: Add error handler, add loading bootstrap and check events. Using DI container (@IbragimovDiyorbek)
 - Bug #95: Explicitly mark nullable parameters (@batyrmastyr)
-- New #39: Add temporal support (@xepozz)
 
 ## 3.0.1 April 23, 2024
 
