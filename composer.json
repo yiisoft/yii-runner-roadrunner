@@ -61,6 +61,7 @@
         "grpc/grpc": "^1.50.0"
     },
     "suggest": {
+        "ext-protobuf": "For better performance",
         "grpc/grpc": "Needed for gRPC support",
         "ext-grpc": "Needed for gRPC support",
         "temporal/sdk": "Add Temporal support"
