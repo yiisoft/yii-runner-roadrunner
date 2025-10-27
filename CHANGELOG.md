@@ -2,7 +2,7 @@
 
 ## 3.1.1 under development
 
-- no changes in this release.
+- Enh #xx: Allow to use RoadRunner version 2025.1 and higher (@viktorprogger)
 
 ## 3.1.0 May 13, 2025
 
