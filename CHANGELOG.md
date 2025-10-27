@@ -1,6 +1,6 @@
 # Yii RoadRunner Runner Change Log
 
-## 3.1.1 under development
+## 3.1.1 October 27, 2025
 
 - Enh #100: Allow to use RoadRunner version 2025.1 and higher (@viktorprogger)
 
