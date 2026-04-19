@@ -2,7 +2,7 @@
 
 ## 3.1.2 under development
 
-- no changes in this release.
+- Chg #105: Bump PHP version to 8.5 (@samdark)
 
 ## 3.1.1 October 27, 2025
 
