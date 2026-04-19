@@ -311,9 +311,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $object = new ReflectionObject($errorHandler);
 
         $property = $object->getProperty('debug');
-        $property->setAccessible(true);
         $debugValue = $property->getValue($errorHandler);
-        $property->setAccessible(false);
 
         return !$debugValue;
     }
