@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     static function (): void {
-        echo 'Bootstrapping';
+        global $bootstrapWebCalled;
+        $bootstrapWebCalled = true;
     },
 ];

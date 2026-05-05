@@ -130,8 +130,12 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
         $_ENV['RR_MODE'] = Mode::MODE_HTTP;
         $runner = $this->createRunner(bootstrapGroup: 'bootstrap-web');
 
-        $this->expectOutputString("Bootstrapping{$this->getResponseData(Status::OK, [], 'OK')}");
+        global $bootstrapWebCalled;
+        $bootstrapWebCalled = false;
+
+        $this->expectOutputString("{$this->getResponseData(Status::OK, [], 'OK')}");
         $runner->run();
+        $this->assertTrue($bootstrapWebCalled);
     }
 
     /**
