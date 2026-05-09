@@ -3,6 +3,7 @@
 ## 3.1.2 under development
 
 - Chg #105: Bump PHP version to 8.5 (@samdark)
+- Enh #108: Add `spiral/roadrunner-http` version `^v4.0.0` support (@vjik)
 
 ## 3.1.1 October 27, 2025
 
