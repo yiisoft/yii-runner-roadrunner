@@ -1,5 +1,9 @@
 # Yii RoadRunner Runner Change Log
 
+## 3.2.1 under development
+
+- no changes in this release.
+
 ## 3.2.0 June 03, 2026
 
 - Enh #105: Add PHP 8.5 support (@samdark)
