@@ -47,8 +47,9 @@
         "yiisoft/yii-runner": "^2.0"
     },
     "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.9.1",
+        "grpc/grpc": "^1.50.0",
         "httpsoft/http-message": "^1.0",
-        "maglnet/composer-require-checker": "^4.2",
         "phpunit/phpunit": "^10.3",
         "rector/rector": "^2.0.3",
         "roave/infection-static-analysis-plugin": "^1.35",
@@ -56,8 +57,7 @@
         "temporal/sdk": "^2.11",
         "vimeo/psalm": "^5.22 || ^6.1",
         "yiisoft/middleware-dispatcher": "^5.0",
-        "yiisoft/test-support": "^3.0",
-        "grpc/grpc": "^1.50.0"
+        "yiisoft/test-support": "^3.0"
     },
     "suggest": {
         "ext-protobuf": "For better performance",
@@ -80,6 +80,11 @@
         }
     },
     "extra": {
+        "bamarni-bin": {
+            "bin-links": true,
+            "target-directory": "tools",
+            "forward-command": true
+        },
         "config-plugin-options": {
             "source-directory": "config",
             "build-merge-plan": false
@@ -93,6 +98,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "infection/extension-installer": true,
+            "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "yiisoft/config": true
         }
