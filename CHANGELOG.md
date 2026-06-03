@@ -1,6 +1,6 @@
 # Yii RoadRunner Runner Change Log
 
-## 3.1.2 under development
+## 3.2.0 June 03, 2026
 
 - Enh #105: Add PHP 8.5 support (@samdark)
 - Enh #108: Add `spiral/roadrunner-http` version `^v4.0.0` support (@vjik)
