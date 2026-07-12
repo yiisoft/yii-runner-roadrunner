@@ -65,7 +65,7 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         array $nestedParamsGroups = ['params'],
         array $nestedEventsGroups = ['events'],
         private readonly ?LoggerInterface $logger = null,
-        private ?ErrorHandler $temporaryErrorHandler = null
+        private ?ErrorHandler $temporaryErrorHandler = null,
     ) {
         parent::__construct(
             $rootPath,
@@ -138,37 +138,6 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
         });
     }
 
-    private function createTemporaryErrorHandler(): ErrorHandler
-    {
-        return $this->temporaryErrorHandler ?? new ErrorHandler($this->logger ?? new NullLogger(), new PlainTextRenderer());
-    }
-
-    /**
-     * @throws ErrorException
-     */
-    private function registerErrorHandler(ErrorHandler $registered, ErrorHandler|null $unregistered = null): void
-    {
-        $unregistered?->unregister();
-
-        if ($this->debug) {
-            $registered->debug();
-        }
-
-        $registered->register();
-    }
-
-    /**
-     * @param ContainerInterface $container
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function afterRespond(ContainerInterface $container): void
-    {
-        /** @psalm-suppress MixedMethodCall */
-        $container->get(StateResetter::class)->reset();
-        gc_collect_cycles();
-    }
-
     /**
      * Returns a new instance with the specified gRPC worker instance
      *
@@ -214,5 +183,36 @@ final class RoadRunnerGrpcApplicationRunner extends ApplicationRunner
     public function getInvoker(): InvokerInterface
     {
         return $this->invoker ?? new Invoker();
+    }
+
+    private function createTemporaryErrorHandler(): ErrorHandler
+    {
+        return $this->temporaryErrorHandler ?? new ErrorHandler($this->logger ?? new NullLogger(), new PlainTextRenderer());
+    }
+
+    /**
+     * @throws ErrorException
+     */
+    private function registerErrorHandler(ErrorHandler $registered, ?ErrorHandler $unregistered = null): void
+    {
+        $unregistered?->unregister();
+
+        if ($this->debug) {
+            $registered->debug();
+        }
+
+        $registered->register();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function afterRespond(ContainerInterface $container): void
+    {
+        /** @psalm-suppress MixedMethodCall */
+        $container->get(StateResetter::class)->reset();
+        gc_collect_cycles();
     }
 }

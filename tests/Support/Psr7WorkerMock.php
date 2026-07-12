@@ -13,13 +13,13 @@ use Throwable;
 
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 final class Psr7WorkerMock implements PSR7WorkerInterface
 {
     private int $requestCount = 0;
 
-    public function __construct(private ServerRequestInterface|Throwable|null $request = null)
-    {
-    }
+    public function __construct(private ServerRequestInterface|Throwable|null $request = null) {}
 
     public function getRequestCount(): int
     {
@@ -50,23 +50,17 @@ final class Psr7WorkerMock implements PSR7WorkerInterface
 
     public function getWorker(): WorkerInterface
     {
-        return new class () implements WorkerInterface {
+        return new class implements WorkerInterface {
             public function waitPayload(): ?Payload
             {
                 return new Payload(null);
             }
 
-            public function respond(Payload $payload): void
-            {
-            }
+            public function respond(Payload $payload): void {}
 
-            public function error(string $error): void
-            {
-            }
+            public function error(string $error): void {}
 
-            public function stop(): void
-            {
-            }
+            public function stop(): void {}
 
             public function hasPayload(?string $class = null): bool
             {

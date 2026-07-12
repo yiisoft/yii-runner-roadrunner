@@ -11,6 +11,8 @@ use Yiisoft\ErrorHandler\ThrowableRendererInterface;
 
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 final class PlainTextRendererMock implements ThrowableRendererInterface
 {
     public function render(Throwable $t, ?ServerRequestInterface $request = null): ErrorData

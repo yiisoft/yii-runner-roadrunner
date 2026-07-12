@@ -239,7 +239,7 @@ final class RoadRunnerHttpApplicationRunnerTest extends TestCase
                     'request-uri' => '',
                     'request-attribute-exists' => false,
                 ]),
-            )
+            ),
         );
 
         $runner->run();

@@ -11,8 +11,7 @@ final class TemporalDeclarationProvider
         private readonly array $workflows,
         /** @var class-string[] $activities */
         private readonly array $activities,
-    ) {
-    }
+    ) {}
 
     /**
      * @return class-string[]
