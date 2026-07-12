@@ -28,16 +28,16 @@ if (!($temporalParams['enabled'] ?? false)) {
 
 return [
     DataConverterInterface::class => DataConverter::class,
-    DataConverter::class => fn () => DataConverter::createDefault(),
+    DataConverter::class => fn() => DataConverter::createDefault(),
 
     RPCConnectionInterface::class => Goridge::class,
-    Goridge::class => fn () => Goridge::create(),
+    Goridge::class => fn() => Goridge::create(),
 
     WorkerFactoryInterface::class => WorkerFactory::class,
-    WorkerFactory::class => fn () => WorkerFactory::create(),
+    WorkerFactory::class => fn() => WorkerFactory::create(),
 
     HostConnectionInterface::class => RoadRunner::class,
-    RoadRunner::class => fn () => RoadRunner::create(),
+    RoadRunner::class => fn() => RoadRunner::create(),
 
     WorkflowClientInterface::class => WorkflowClient::class,
     WorkflowClient::class => [
@@ -48,9 +48,9 @@ return [
     ],
 
     ServiceClientInterface::class => ServiceClient::class,
-    ServiceClient::class => fn () => ServiceClient::create($temporalParams['host']),
+    ServiceClient::class => fn() => ServiceClient::create($temporalParams['host']),
 
-    TemporalDeclarationProvider::class => fn () => new TemporalDeclarationProvider(
+    TemporalDeclarationProvider::class => fn() => new TemporalDeclarationProvider(
         $temporalParams['workflows'] ?? [],
         $temporalParams['activities'] ?? [],
     ),

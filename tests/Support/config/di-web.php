@@ -61,10 +61,10 @@ return [
                 return $container
                     ->get(MiddlewareDispatcher::class)
                     ->withMiddlewares([
-                        static fn () => new class () implements MiddlewareInterface {
+                        static fn() => new class implements MiddlewareInterface {
                             public function process(
                                 ServerRequestInterface $request,
-                                RequestHandlerInterface $handler
+                                RequestHandlerInterface $handler,
                             ): ResponseInterface {
                                 return (new Response())->withBody((new StreamFactory())->createStream('OK'));
                             }

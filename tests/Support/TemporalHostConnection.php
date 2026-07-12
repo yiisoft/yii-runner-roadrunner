@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\Runner\RoadRunner\Tests\Support;
 
 use Temporal\Worker\Transport\CommandBatch;
 use Temporal\Worker\Transport\HostConnectionInterface;
+use Throwable;
 
 final class TemporalHostConnection implements HostConnectionInterface
 {
@@ -24,11 +25,7 @@ final class TemporalHostConnection implements HostConnectionInterface
         return array_shift($this->batches);
     }
 
-    public function send(string $frame): void
-    {
-    }
+    public function send(string $frame): void {}
 
-    public function error(\Throwable $error): void
-    {
-    }
+    public function error(Throwable $error): void {}
 }

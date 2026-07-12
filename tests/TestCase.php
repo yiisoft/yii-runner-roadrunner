@@ -50,6 +50,8 @@ use Yiisoft\Yii\Runner\RoadRunner\Tests\Support\TemporalHostConnection;
 
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected function createContainer(bool $throwException = false): Container
@@ -68,10 +70,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             /**
              * Temporal related definitions.
              */
-            DataConverterInterface::class => fn () => DataConverter::createDefault(),
-            RPCConnectionInterface::class => fn () => Goridge::create(),
-            WorkerFactoryInterface::class => fn () => WorkerFactory::create(),
-            HostConnectionInterface::class => fn () => new TemporalHostConnection(),
+            DataConverterInterface::class => fn() => DataConverter::createDefault(),
+            RPCConnectionInterface::class => fn() => Goridge::create(),
+            WorkerFactoryInterface::class => fn() => WorkerFactory::create(),
+            HostConnectionInterface::class => fn() => new TemporalHostConnection(),
 
             ThrowableResponseFactoryInterface::class => ThrowableResponseFactory::class,
             ThrowableResponseFactory::class => [
@@ -93,14 +95,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                             return $container
                                 ->get(MiddlewareDispatcher::class)
                                 ->withMiddlewares([
-                                    static fn () => new class ($throwException) implements MiddlewareInterface {
-                                        public function __construct(private bool $throwException)
-                                        {
-                                        }
+                                    static fn() => new class ($throwException) implements MiddlewareInterface {
+                                        public function __construct(private bool $throwException) {}
 
                                         public function process(
                                             ServerRequestInterface $request,
-                                            RequestHandlerInterface $handler
+                                            RequestHandlerInterface $handler,
                                         ): ResponseInterface {
                                             if ($this->throwException) {
                                                 throw new Exception('Failure');

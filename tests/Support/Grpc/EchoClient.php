@@ -17,7 +17,7 @@ class EchoClient extends BaseStub
             $message,
             [Message::class, 'decode'],
             $metadata,
-            $options
+            $options,
         );
     }
 }
