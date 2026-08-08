@@ -48,7 +48,6 @@
     },
     "require-dev": {
         "ext-mbstring": "*",
-        "bamarni/composer-bin-plugin": "^1.9.1",
         "friendsofphp/php-cs-fixer": "^3.93",
         "google/protobuf": "^4.33",
         "grpc/grpc": "^1.50.0",
@@ -90,11 +89,6 @@
         }
     },
     "extra": {
-        "bamarni-bin": {
-            "bin-links": true,
-            "target-directory": "tools",
-            "forward-command": true
-        },
         "config-plugin-options": {
             "source-directory": "config",
             "build-merge-plan": false
@@ -108,7 +102,6 @@
         "sort-packages": true,
         "allow-plugins": {
             "infection/extension-installer": true,
-            "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "yiisoft/config": true
         }
