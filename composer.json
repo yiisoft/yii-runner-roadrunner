@@ -35,7 +35,6 @@
         "spiral/roadrunner-worker": "^3.0.0",
         "spiral/roadrunner-cli": "^2.5.0",
         "spiral/roadrunner-grpc": "^3.0.0",
-        "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0 || ^2.0 || ^3.0",
         "yiisoft/di": "^1.0",
         "yiisoft/error-handler": "^4.0",
@@ -64,6 +63,7 @@
         "temporal/sdk": "^2.11",
         "vimeo/psalm": "^5.22 || ^6.1",
         "yiisoft/code-style": "^1.0",
+        "yiisoft/config": "^1.1",
         "yiisoft/middleware-dispatcher": "^5.0",
         "yiisoft/test-support": "^3.0",
         "yiisoft/yii-event": "^2.2"
