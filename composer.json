@@ -35,7 +35,6 @@
         "spiral/roadrunner-worker": "^3.0.0",
         "spiral/roadrunner-cli": "^2.5.0",
         "spiral/roadrunner-grpc": "^3.0.0",
-        "yiisoft/config": "^1.1",
         "yiisoft/definitions": "^1.0 || ^2.0 || ^3.0",
         "yiisoft/di": "^1.0",
         "yiisoft/error-handler": "^4.0",
@@ -47,19 +46,27 @@
         "yiisoft/yii-runner": "^2.0"
     },
     "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.9.1",
+        "ext-mbstring": "*",
         "friendsofphp/php-cs-fixer": "^3.93",
+        "google/protobuf": "^4.33",
         "grpc/grpc": "^1.50.0",
         "httpsoft/http-message": "^1.0",
         "phpunit/phpunit": "^10.3",
+        "psr/event-dispatcher": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
         "rector/rector": "^2.5.6",
         "roave/infection-static-analysis-plugin": "^1.35",
+        "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.23",
+        "spiral/goridge": "^4.2",
         "temporal/sdk": "^2.11",
         "vimeo/psalm": "^5.22 || ^6.1",
         "yiisoft/code-style": "^1.0",
+        "yiisoft/config": "^1.1",
         "yiisoft/middleware-dispatcher": "^5.0",
-        "yiisoft/test-support": "^3.0"
+        "yiisoft/test-support": "^3.0",
+        "yiisoft/yii-event": "^2.2"
     },
     "suggest": {
         "ext-protobuf": "For better performance",
@@ -82,11 +89,6 @@
         }
     },
     "extra": {
-        "bamarni-bin": {
-            "bin-links": true,
-            "target-directory": "tools",
-            "forward-command": true
-        },
         "config-plugin-options": {
             "source-directory": "config",
             "build-merge-plan": false
@@ -100,13 +102,13 @@
         "sort-packages": true,
         "allow-plugins": {
             "infection/extension-installer": true,
-            "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "yiisoft/config": true
         }
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix",
+        "dependency-analyser": "composer-dependency-analyser",
         "rector": "rector",
         "test": "phpunit --testdox",
         "test-watch": "phpunit-watcher watch"

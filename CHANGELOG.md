@@ -3,6 +3,7 @@
 ## 3.2.1 under development
 
 - Enh #116: Explicitly import functions in "use" section (@vjik)
+- Enh #120: Remove unused `yiisoft/config` dependency (@vjik)
 
 ## 3.2.0 June 03, 2026
 
