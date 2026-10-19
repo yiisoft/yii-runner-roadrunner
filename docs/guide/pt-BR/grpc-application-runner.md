@@ -6,11 +6,11 @@ Yii RoadRunner Runner suporta a execução de serviços [gRPC](https://grpc.io) 
 
 ## Uso geral
 
-Por exemplo, vamos pegar o serviço `Pinger` descrito na [documentação](https://roadrunner.dev/docs/plugins-grpc)
+Por exemplo, vamos pegar o serviço `Pinger` descrito na [documentação](https://docs.roadrunner.dev/docs/grpc/grpc)
 
 ### DTO e geração de interface de serviço
 
-Uma descrição detalhada de como fazer isso pode ser lida em <https://roadrunner.dev/docs/plugins-grpc>
+Uma descrição detalhada de como fazer isso pode ser lida em <https://docs.roadrunner.dev/docs/grpc/grpc>
 
 ### Criar trabalhador para gRPC
 

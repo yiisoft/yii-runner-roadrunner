@@ -18,7 +18,8 @@ The package contains a bootstrap for running Yii3 applications using [RoadRunner
 
 ## Requirements
 
-- PHP 8.1 or higher.
+- PHP 8.2 or higher.
+- RoadRunner 3.
 
 ## Installation
 
@@ -33,7 +34,7 @@ composer require yiisoft/yii-runner-roadrunner
 Get RoadRunner:
 
 ```shell
-./vendor/bin/rr get
+./vendor/bin/rr get-binary
 ```
 
 Create `worker.php` in your application root directory:
@@ -75,7 +76,8 @@ http:
         # Debug mode for the pool. In this mode, pool will not pre-allocate the worker.
         # Worker (only 1, num_workers ignored) will be allocated right after the request arrived.
         debug: false
-    middleware: ["static", "headers"]
+    # Requests pass the middleware from left to right.
+    middleware: ["headers", "static"]
     static:
         dir:   "./public"
         forbid: [".php", ".htaccess"]
@@ -89,7 +91,7 @@ logs:
 ```
 
 > **Note**:
-> Official [configuration reference](https://roadrunner.dev/docs/intro-config/). You can also activate `RoadRunner`
+> Official [configuration reference](https://docs.roadrunner.dev/docs/general/config). You can also activate `RoadRunner`
 > schema in your IDE to get autocompletion hints.
 
 Run RoadRunner with the config specified:
@@ -203,6 +205,8 @@ Explore more about Temporal on [the official website](https://temporal.io) and i
 ```shell
 composer require temporal/sdk
 ```
+
+> Use a `temporal/sdk` version that supports RoadRunner 3.
 
 ### Configuration
 
