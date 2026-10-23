@@ -1,7 +1,10 @@
 # Yii RoadRunner Runner Change Log
 
-## 3.2.1 under development
+## 4.0.0 under development
 
+- Chg #126: Support RoadRunner 3: replace `spiral/roadrunner-*` dependencies with `roadrunner/http` `^4.2.1`,
+  `roadrunner/worker` `^3.8.2`, `roadrunner/grpc` `^3.8.1` and `roadrunner/cli` `^3.0.1` (@roxblnfk)
+- Chg #126: Change PHP constraint in `composer.json` to `8.2 - 8.6` (@roxblnfk)
 - Enh #116: Explicitly import functions in "use" section (@vjik)
 - Enh #120: Remove unused `yiisoft/config` dependency (@vjik)
 

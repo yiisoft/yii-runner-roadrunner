@@ -18,7 +18,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # Install RoadRunner
-COPY --from=spiralscout/roadrunner:2023.1.5 /usr/bin/rr /usr/local/bin/rr
+COPY --from=ghcr.io/roadrunner-server/roadrunner:3.0.0 /usr/bin/rr /usr/local/bin/rr
 
 # Set up work directory
 ADD . /app

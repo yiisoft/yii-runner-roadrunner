@@ -6,11 +6,11 @@ Yii RoadRunner Runner поддерживает запуск сервисов, и
 
 ## Основное использование
 
-Для примера возьмем сервис `Pinger`, описанный в [документации](https://roadrunner.dev/docs/plugins-grpc)
+Для примера возьмем сервис `Pinger`, описанный в [документации](https://docs.roadrunner.dev/docs/grpc/grpc)
 
 ### Генерация DTO и сервисного интерфейса
 
-Подробное описание как это сделать можно прочитать https://roadrunner.dev/docs/plugins-grpc
+Подробное описание как это сделать можно прочитать https://docs.roadrunner.dev/docs/grpc/grpc
 
 ### Создание gRPC обработчика
 

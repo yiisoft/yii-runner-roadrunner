@@ -25,6 +25,9 @@ name: build
 permissions:
   contents: read
 
+env:
+  DLOAD_CACHE_DIR: ${{ github.workspace }}/runtime/dload-cache
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -36,7 +39,7 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        php: ['8.2', '8.3', '8.4', '8.5']
 
     steps:
       - name: Checkout.
@@ -56,8 +59,17 @@ jobs:
       - name: Install dependencies with composer.
         run: composer update --no-interaction --no-progress --optimize-autoloader --ansi
 
+      # Release metadata only, no binaries or tokens.
+      - name: Restore DLoad version registry
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: runtime/dload-cache
+          key: dload-registry-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: dload-registry-${{ runner.os }}-
+
       - name: Get RoadRunner binary
         env:
+          # Authenticated requests get a higher GitHub API rate limit than anonymous ones.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           vendor/bin/rr get-binary
