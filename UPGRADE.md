@@ -14,8 +14,8 @@ application when you upgrade the package from one version to another.
   dependencies are replaced with `roadrunner/http`, `roadrunner/worker`, `roadrunner/grpc` and `roadrunner/cli`.
   The PHP namespaces (`Spiral\RoadRunner\...`) are the same. If your `composer.json` requires the old package names,
   replace them with the new ones.
-- Get the RoadRunner 3 binary with `./vendor/bin/rr get-binary`. Composer treats calendar versions (2025.x) as greater
-  than 3.x, so any constraint or check on the binary version needs an explicit `^3.0`.
+- Get the RoadRunner 3 binary with `./vendor/bin/rr get-binary`. You can remove the `spiral/roadrunner` package
+  if your `composer.json` still requires it.
 - Update `.rr.yaml` according to the [RoadRunner 3 migration guide](https://docs.roadrunner.dev/docs/general/v3-migration):
   - `http.middleware` now runs from left to right; reverse the list to keep its previous order;
   - `logs.file_logger_options` is removed; list the log file in `logs.output` and use an external tool for rotation.
