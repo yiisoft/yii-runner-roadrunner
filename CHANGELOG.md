@@ -1,6 +1,6 @@
 # Yii RoadRunner Runner Change Log
 
-## 4.0.0 under development
+## 4.0.0 October 24, 2026
 
 - Chg #126: Support RoadRunner 3: replace `spiral/roadrunner-*` dependencies with `roadrunner/http` `^4.2.1`,
   `roadrunner/worker` `^3.8.2`, `roadrunner/grpc` `^3.8.1` and `roadrunner/cli` `^3.0.1` (@roxblnfk)
