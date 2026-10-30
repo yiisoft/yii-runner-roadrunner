@@ -48,7 +48,7 @@
     "require-dev": {
         "ext-mbstring": "*",
         "friendsofphp/php-cs-fixer": "^3.93",
-        "google/protobuf": "^4.33",
+        "google/protobuf": "^4.33 || ^5.0",
         "grpc/grpc": "^1.50.0",
         "httpsoft/http-message": "^1.0",
         "phpunit/phpunit": "^10.3",
