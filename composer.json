@@ -61,7 +61,7 @@
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.23",
         "temporal/sdk": "^2.20",
-        "vimeo/psalm": "^5.22 || ^6.1 || ^7.0",
+        "vimeo/psalm": "^7.0",
         "yiisoft/code-style": "^1.0",
         "yiisoft/config": "^1.1",
         "yiisoft/middleware-dispatcher": "^5.0",
